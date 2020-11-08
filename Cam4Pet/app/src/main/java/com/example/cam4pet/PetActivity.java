@@ -61,7 +61,7 @@ public class PetActivity extends AppCompatActivity {
 
         setUpModel();
 
-        arFragment.getArSceneView().getScene().setOnUpdateListener(this::onSceneUpdate);
+        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onSceneUpdate);
     }
 
     private void createObject() {
@@ -117,14 +117,14 @@ public class PetActivity extends AppCompatActivity {
             createObject();
         }
 
-        try {
-            final Image image = arFragment.getArSceneView().getArFrame().acquireCameraImage();
-        } catch (NotYetAvailableException e) {
-            e.printStackTrace();
-            Log.i(TAG, "onUpdate: No image available");
-        } finally {
-            Log.i(TAG, "onUpdate: Image available");
-        }
+//        try {
+//            final Image image = arFragment.getArSceneView().getArFrame().acquireCameraImage();
+//        } catch (NotYetAvailableException e) {
+//            e.printStackTrace();
+//            Log.i(TAG, "onUpdate: No image available");
+//        } finally {
+//            Log.i(TAG, "onUpdate: Image available");
+//        }
     }
 
     public static boolean checkIsSupportedDevice(final Activity activity) {

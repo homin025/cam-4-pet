@@ -406,7 +406,7 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
                     new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize());
         }
 
-        mActivity.getSupportFragmentManager().beginTransaction().replace(R.id.detect_fragment, fragment).commit();
+//        mActivity.getSupportFragmentManager().beginTransaction().replace(R.id.detect_fragment, fragment).commit();
     }
 
     protected void fillBytes(final Image.Plane[] planes, final byte[][] yuvBytes) {
