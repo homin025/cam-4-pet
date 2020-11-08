@@ -5,20 +5,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.google.ar.core.Pose;
 import com.google.ar.core.Plane;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
+import com.google.ar.core.TrackingState;
+import com.google.ar.core.exceptions.NotYetAvailableException;
 
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.ArSceneView;
+import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.collision.Ray;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+
+import java.util.List;
+
 
 public class PetActivity extends AppCompatActivity {
     private static final String TAG = "PetActivity";
@@ -26,6 +40,10 @@ public class PetActivity extends AppCompatActivity {
     private static final double MIN_OPENGL_VERSION = 3.0;
 
     private ArFragment arFragment;
+    private ArSceneView arSceneView;
+    private AnchorNode mAnchorNode;
+
+    private boolean isObjectCreated = false;
 
     public ModelRenderable andyRenderable;
 
@@ -39,7 +57,47 @@ public class PetActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_pet);
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_fragment);
+        arSceneView = arFragment.getArSceneView();
 
+        setUpModel();
+
+        arFragment.getArSceneView().getScene().setOnUpdateListener(this::onSceneUpdate);
+    }
+
+    private void createObject() {
+        if(arSceneView.getArFrame() == null){
+            Log.d(TAG, "onUpdate: No frame available");
+            return;
+        }
+
+        if (arSceneView.getArFrame().getCamera().getTrackingState() != TrackingState.TRACKING) {
+            Log.d(TAG, "onUpdate: Tracking not started yet");
+            return;
+        }
+
+        int width = arSceneView.getWidth();
+        int height = arSceneView.getHeight();
+
+        //Ray ray = arSceneView.getScene().getCamera().screenPointToRay(width / 2, height / 2);
+        //Vector3 p = ray.getPoint(1f);
+
+        List<HitResult> hits = arSceneView.getArFrame().hitTest(width/2f, height/2f);
+        if(hits.size() != 0){
+            HitResult hit = hits.get(0);
+
+            Anchor anchor = hit.createAnchor();
+            mAnchorNode = new AnchorNode(anchor);
+            mAnchorNode.setParent(arSceneView.getScene());
+
+            Node n = new Node();
+            n.setRenderable(andyRenderable);
+            n.setParent(mAnchorNode);
+
+            isObjectCreated = true;
+        }
+    }
+
+    private void setUpModel() {
         ModelRenderable.builder()
                 .setSource(this, R.raw.andy)
                 .build()
@@ -52,23 +110,21 @@ public class PetActivity extends AppCompatActivity {
                             return null;
                         }
                 );
+    }
 
-        arFragment.setOnTapArPlaneListener(
-                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                    if(andyRenderable == null) {
-                        return;
-                    }
+    private void onSceneUpdate(FrameTime frameTime) {
+        if(!isObjectCreated){
+            createObject();
+        }
 
-                    Anchor anchor = hitResult.createAnchor();
-                    AnchorNode anchorNode = new AnchorNode(anchor);
-                    anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-                    TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
-                    andy.setParent(anchorNode);
-                    andy.setRenderable(andyRenderable);
-                    andy.select();
-                }
-        );
+        try {
+            final Image image = arFragment.getArSceneView().getArFrame().acquireCameraImage();
+        } catch (NotYetAvailableException e) {
+            e.printStackTrace();
+            Log.i(TAG, "onUpdate: No image available");
+        } finally {
+            Log.i(TAG, "onUpdate: Image available");
+        }
     }
 
     public static boolean checkIsSupportedDevice(final Activity activity) {
