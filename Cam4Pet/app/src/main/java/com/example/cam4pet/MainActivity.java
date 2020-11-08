@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        buttonPet = findViewById(R.id.buttonPet);
+
         buttonPet.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, PetActivity.class);
             startActivity(intent);
