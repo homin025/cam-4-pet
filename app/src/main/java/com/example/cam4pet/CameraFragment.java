@@ -340,12 +340,12 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
         super.onDestroy();
     }
 
-    protected synchronized void runInBackground(final Runnable r) {
-        if (handler != null) {
-            LOGGER.i("Runnable run in background");
-            handler.post(r);
-        }
-    }
+//    protected synchronized void runInBackground(final Runnable r) {
+//        if (handler != null) {
+//            LOGGER.i("Runnable run in background");
+//            handler.post(r);
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(

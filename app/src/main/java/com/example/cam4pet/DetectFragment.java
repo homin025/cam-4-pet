@@ -11,6 +11,8 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.Image;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
@@ -69,6 +71,9 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
     private BorderedText borderedText;
 
+    private static Handler handler;
+    private static HandlerThread handlerThread;
+
     public static DetectFragment newInstance(Context context) {
         DetectFragment detectFragment = new DetectFragment();
 
@@ -76,6 +81,10 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
         if(context instanceof Activity) {
             detectFragment.mActivity = (AppCompatActivity) context;
         }
+
+        handlerThread = new HandlerThread("inference");
+        handlerThread.start();
+        handler = new Handler(handlerThread.getLooper());
 
         return detectFragment;
     }
@@ -232,14 +241,21 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
                     }
                 }
 
-                tracker.trackResults(mappedRecognitions, currTimestamp);
-                trackingOverlay.postInvalidate();
+//                tracker.trackResults(mappedRecognitions, currTimestamp);
+//                trackingOverlay.postInvalidate();
 
                 computingDetection = false;
             }
         };
 
         runInBackground(run);
+    }
+
+    protected synchronized void runInBackground(final Runnable r) {
+        if (handler != null) {
+            LOGGER.i("Runnable run in background");
+            handler.post(r);
+        }
     }
 
     @Override
