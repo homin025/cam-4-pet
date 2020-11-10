@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
@@ -96,6 +97,15 @@ public class PetActivity extends AppCompatActivity {
             Node n = new Node();
             n.setRenderable(dogbowlRenderable);
             n.setParent(mAnchorNode);
+
+
+            n.setOnTapListener(new Node.OnTapListener(){
+                @Override
+                public void onTap(HitTestResult hitTestResult, MotionEvent motionEvent) {
+                    Intent intent = new Intent(PetActivity.this, PopupActivty.class);
+                    startActivity(intent);
+                }
+            });
 
             isObjectCreated = true;
         }

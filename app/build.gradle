@@ -49,6 +49,7 @@ dependencies {
 
     implementation 'org.tensorflow:tensorflow-lite:2.2.0'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.2.0'
+    compile 'com.ssomai:android.scalablelayout:2.1.6'
 }
 
 apply plugin: 'com.google.ar.sceneform.plugin'

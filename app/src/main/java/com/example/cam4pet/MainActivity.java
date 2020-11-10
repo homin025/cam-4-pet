@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.ar.core.ArCoreApk;
@@ -27,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private Session mSession;
     private boolean mUserRequestInstall = true;
 
-    Button buttonPet;
+    ImageButton buttonPet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonPet = findViewById(R.id.buttonPet);
+        buttonPet = findViewById(R.id.btnCam);
 
         buttonPet.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, PetActivity.class);

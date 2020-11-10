@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstarintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88FFDFBC"
+        app:scale_base_height="640"
+        app:scale_base_width="360"
+        tools:ignore="MissingPrefix">
+
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Popup"
+            android:layout_gravity="center_horizontal"
+            app:scale_textsize="40"
+            app:scale_height="100"
+            app:scale_width="200"
+            app:scale_top="200"
+
+
+            />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</FrameLayout>
