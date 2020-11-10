@@ -205,12 +205,12 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
                 Log.e("CHECK", "run: " + results.size());
 
-                cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-                final Canvas canvas = new Canvas(cropCopyBitmap);
-                final Paint paint = new Paint();
-                paint.setColor(Color.RED);
-                paint.setStyle(Paint.Style.STROKE);
-                paint.setStrokeWidth(2.0f);
+//                cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
+//                final Canvas canvas = new Canvas(cropCopyBitmap);
+//                final Paint paint = new Paint();
+//                paint.setColor(Color.RED);
+//                paint.setStyle(Paint.Style.STROKE);
+//                paint.setStrokeWidth(2.0f);
 
                 float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
                 switch (MODE) {
@@ -225,19 +225,24 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
                 for (final Classifier.Recognition result : results) {
                     final RectF location = result.getLocation();
                     if (location != null && result.getConfidence() >= minimumConfidence) {
-                        canvas.drawRect(location, paint);
+//                        canvas.drawRect(location, paint);
 
                         detectResult = result.getTitle();
 
-                        LOGGER.i("Detection result " + detectResult);
+                        if (!detectResult.equals("dog") || !detectResult.equals("cat")) {
+                            continue;
+                        }
+                        else {
+                            LOGGER.i("Detection result " + detectResult);
 
-                        Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_LONG);
-                        toast.show();
+                            Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
 
-                        cropToFrameTransform.mapRect(location);
-
-                        result.setLocation(location);
-                        mappedRecognitions.add(result);
+//                        cropToFrameTransform.mapRect(location);
+//
+//                        result.setLocation(location);
+//                        mappedRecognitions.add(result);
                     }
                 }
 
