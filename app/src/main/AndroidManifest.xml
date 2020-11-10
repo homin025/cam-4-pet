@@ -34,7 +34,7 @@
         <activity android:name=".PetActivity" />
 
         <activity
-            android:name=".PopupActivty"
+            android:name=".PopupActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
     </application>

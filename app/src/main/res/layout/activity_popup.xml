@@ -16,7 +16,6 @@
         app:scale_base_width="360"
         tools:ignore="MissingPrefix">
 
-
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
@@ -27,8 +26,7 @@
             app:scale_height="100"
             app:scale_width="200"
             app:scale_top="200"
-
-
             />
     </com.ssomai.android.scalablelayout.ScalableLayout>
+
 </FrameLayout>

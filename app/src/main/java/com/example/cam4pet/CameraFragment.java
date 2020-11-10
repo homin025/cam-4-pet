@@ -239,7 +239,7 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
     }
 
     /** Customed function */
-    public void getImagefromCamera(Image _image) {
+    public void getImagefromCamera(Image image) {
         // We need wait until we have some size from onPreviewSizeChosen
         if (previewWidth == 0 || previewHeight == 0) {
             return;
@@ -248,8 +248,6 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
             rgbBytes = new int[previewWidth * previewHeight];
         }
         try {
-            final Image image = _image;
-
             if (image == null) {
                 return;
             }

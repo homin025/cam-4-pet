@@ -130,22 +130,22 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
         previewWidth = size.getWidth();
         previewHeight = size.getHeight();
 
-//        sensorOrientation = rotation - getScreenOrientation();
-//        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
-//
+        sensorOrientation = rotation - getScreenOrientation();
+        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
+
         LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
-//        rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
-//        croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Bitmap.Config.ARGB_8888);
-//
-//        frameToCropTransform =
-//                ImageUtils.getTransformationMatrix(
-//                        previewWidth, previewHeight,
-//                        cropSize, cropSize,
-//                        sensorOrientation, MAINTAIN_ASPECT);
-//
-//        cropToFrameTransform = new Matrix();
-//        frameToCropTransform.invert(cropToFrameTransform);
-//
+        rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+        croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Bitmap.Config.ARGB_8888);
+
+        frameToCropTransform =
+                ImageUtils.getTransformationMatrix(
+                        previewWidth, previewHeight,
+                        cropSize, cropSize,
+                        sensorOrientation, MAINTAIN_ASPECT);
+
+        cropToFrameTransform = new Matrix();
+        frameToCropTransform.invert(cropToFrameTransform);
+
 //        trackingOverlay = (OverlayView) mActivity.findViewById(R.id.tracking_overlay);
 //        trackingOverlay.addCallback(
 //                new OverlayView.DrawCallback() {

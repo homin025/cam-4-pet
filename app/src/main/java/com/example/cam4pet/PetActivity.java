@@ -62,7 +62,7 @@ public class PetActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_pet);
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_fragment);
-        detectFragment = DetectFragment.newInstance(this.getApplicationContext());
+        detectFragment = DetectFragment.newInstance(this);
 
         setUpModel();
 
@@ -102,7 +102,7 @@ public class PetActivity extends AppCompatActivity {
             n.setOnTapListener(new Node.OnTapListener(){
                 @Override
                 public void onTap(HitTestResult hitTestResult, MotionEvent motionEvent) {
-                    Intent intent = new Intent(PetActivity.this, PopupActivty.class);
+                    Intent intent = new Intent(PetActivity.this, PopupActivity.class);
                     startActivity(intent);
                 }
             });
@@ -155,15 +155,17 @@ public class PetActivity extends AppCompatActivity {
         Log.i(TAG, "onUpdate: Image available");
 
         if(!isDetectorCreated) {
-            detectFragment.setDesiredPreviewFrameSize(new Size(arFragment.getArSceneView().getWidth(), arFragment.getArSceneView().getHeight()));
-            detectFragment.onPreviewSizeChosen(new Size(arFragment.getArSceneView().getWidth(), arFragment.getArSceneView().getHeight()), 90);
+            detectFragment.setDesiredPreviewFrameSize(new Size(image.getWidth(), image.getHeight()));
+            detectFragment.onPreviewSizeChosen(new Size(image.getWidth(), image.getHeight()), 90);
+
+//            detectFragment.setDesiredPreviewFrameSize(new Size(arFragment.getArSceneView().getWidth(), arFragment.getArSceneView().getHeight()));
+//            detectFragment.onPreviewSizeChosen(new Size(arFragment.getArSceneView().getWidth(), arFragment.getArSceneView().getHeight()), 90);
+
             isDetectorCreated = true;
         }
 
         if(image != null) {
             detectFragment.getImagefromCamera(image);
-
-            image.close();
         }
     }
 
