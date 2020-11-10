@@ -229,13 +229,13 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
                         detectResult = result.getTitle();
 
-                        if (!detectResult.equals("dog") || !detectResult.equals("cat")) {
+                        if (!detectResult.equals("dog") && !detectResult.equals("cat")) {
                             continue;
                         }
                         else {
                             LOGGER.i("Detection result " + detectResult);
 
-                            Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_SHORT);
                             toast.show();
                         }
 
