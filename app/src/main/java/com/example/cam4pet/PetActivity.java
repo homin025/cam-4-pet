@@ -9,6 +9,7 @@ import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import com.google.ar.sceneform.collision.Ray;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class PetActivity extends AppCompatActivity {
@@ -40,12 +42,14 @@ public class PetActivity extends AppCompatActivity {
     private static final double MIN_OPENGL_VERSION = 3.0;
 
     private ArFragment arFragment;
-    private ArSceneView arSceneView;
+    private DetectFragment detectFragment;
+
     private AnchorNode mAnchorNode;
-
-    private boolean isObjectCreated = false;
-
     public ModelRenderable andyRenderable;
+    public ModelRenderable dogbowlRenderable;
+
+    private boolean isDetectorCreated = false;
+    private boolean isObjectCreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class PetActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_pet);
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_fragment);
-        arSceneView = arFragment.getArSceneView();
+        detectFragment = DetectFragment.newInstance(this.getApplicationContext());
 
         setUpModel();
 
@@ -65,32 +69,32 @@ public class PetActivity extends AppCompatActivity {
     }
 
     private void createObject() {
-        if(arSceneView.getArFrame() == null){
+        if(arFragment.getArSceneView().getArFrame() == null){
             Log.d(TAG, "onUpdate: No frame available");
             return;
         }
 
-        if (arSceneView.getArFrame().getCamera().getTrackingState() != TrackingState.TRACKING) {
+        if (arFragment.getArSceneView().getArFrame().getCamera().getTrackingState() != TrackingState.TRACKING) {
             Log.d(TAG, "onUpdate: Tracking not started yet");
             return;
         }
 
-        int width = arSceneView.getWidth();
-        int height = arSceneView.getHeight();
+        int width = arFragment.getArSceneView().getWidth();
+        int height = arFragment.getArSceneView().getHeight();
 
-        //Ray ray = arSceneView.getScene().getCamera().screenPointToRay(width / 2, height / 2);
+        //Ray ray = arFragment.getArSceneView().getScene().getCamera().screenPointToRay(width / 2, height / 2);
         //Vector3 p = ray.getPoint(1f);
 
-        List<HitResult> hits = arSceneView.getArFrame().hitTest(width/2f, height/2f);
-        if(hits.size() != 0){
+        List<HitResult> hits = arFragment.getArSceneView().getArFrame().hitTest(width/2f, height/2f);
+        if(hits.size() != 0) {
             HitResult hit = hits.get(0);
 
             Anchor anchor = hit.createAnchor();
             mAnchorNode = new AnchorNode(anchor);
-            mAnchorNode.setParent(arSceneView.getScene());
+            mAnchorNode.setParent(arFragment.getArSceneView().getScene());
 
             Node n = new Node();
-            n.setRenderable(andyRenderable);
+            n.setRenderable(dogbowlRenderable);
             n.setParent(mAnchorNode);
 
             isObjectCreated = true;
@@ -110,6 +114,18 @@ public class PetActivity extends AppCompatActivity {
                             return null;
                         }
                 );
+        ModelRenderable.builder()
+                .setSource(this, R.raw.dogbowl)
+                .build()
+                .thenAccept(modelRenderable -> dogbowlRenderable = modelRenderable)
+                .exceptionally(
+                        throwable -> {
+                            Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return null;
+                        }
+                );
     }
 
     private void onSceneUpdate(FrameTime frameTime) {
@@ -117,14 +133,28 @@ public class PetActivity extends AppCompatActivity {
             createObject();
         }
 
-//        try {
-//            final Image image = arFragment.getArSceneView().getArFrame().acquireCameraImage();
-//        } catch (NotYetAvailableException e) {
-//            e.printStackTrace();
-//            Log.i(TAG, "onUpdate: No image available");
-//        } finally {
-//            Log.i(TAG, "onUpdate: Image available");
-//        }
+        Image image = null;
+        try {
+            image = Objects.requireNonNull(arFragment.getArSceneView().getArFrame()).acquireCameraImage();
+        } catch (NotYetAvailableException e) {
+            Log.i(TAG, "onUpdate: No image available");
+            e.printStackTrace();
+            return;
+        }
+
+        Log.i(TAG, "onUpdate: Image available");
+
+        if(!isDetectorCreated) {
+            detectFragment.setDesiredPreviewFrameSize(new Size(arFragment.getArSceneView().getWidth(), arFragment.getArSceneView().getHeight()));
+            detectFragment.onPreviewSizeChosen(new Size(arFragment.getArSceneView().getWidth(), arFragment.getArSceneView().getHeight()), 90);
+            isDetectorCreated = true;
+        }
+
+        if(image != null) {
+            detectFragment.getImagefromCamera(image);
+
+            image.close();
+        }
     }
 
     public static boolean checkIsSupportedDevice(final Activity activity) {

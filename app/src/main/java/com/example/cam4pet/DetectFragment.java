@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.os.SystemClock;
 import android.util.Log;
@@ -68,8 +69,16 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
     private BorderedText borderedText;
 
-    private Context mContext;
-    private AppCompatActivity mActivity;
+    public static DetectFragment newInstance(Context context) {
+        DetectFragment detectFragment = new DetectFragment();
+
+        detectFragment.mContext = context;
+        if(context instanceof Activity) {
+            detectFragment.mActivity = (AppCompatActivity) context;
+        }
+
+        return detectFragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -81,15 +90,16 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
             mActivity = (AppCompatActivity) context;
         }
     }
+
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
-        final float textSizePx =
-                TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, mActivity.getApplicationContext().getResources().getDisplayMetrics());
-        borderedText = new BorderedText(textSizePx);
-        borderedText.setTypeface(Typeface.MONOSPACE);
-
-        tracker = new MultiBoxTracker(mContext);
+//        final float textSizePx =
+//                TypedValue.applyDimension(
+//                        TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, mActivity.getApplicationContext().getResources().getDisplayMetrics());
+//        borderedText = new BorderedText(textSizePx);
+//        borderedText.setTypeface(Typeface.MONOSPACE);
+//
+//        tracker = new MultiBoxTracker(mContext);
 
         int cropSize = TF_OD_API_INPUT_SIZE;
 
@@ -120,48 +130,48 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
         previewWidth = size.getWidth();
         previewHeight = size.getHeight();
 
-        sensorOrientation = rotation - getScreenOrientation();
-        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
-
+//        sensorOrientation = rotation - getScreenOrientation();
+//        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
+//
         LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight);
-        rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
-        croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Bitmap.Config.ARGB_8888);
-
-        frameToCropTransform =
-                ImageUtils.getTransformationMatrix(
-                        previewWidth, previewHeight,
-                        cropSize, cropSize,
-                        sensorOrientation, MAINTAIN_ASPECT);
-
-        cropToFrameTransform = new Matrix();
-        frameToCropTransform.invert(cropToFrameTransform);
-
-        trackingOverlay = (OverlayView) mActivity.findViewById(R.id.tracking_overlay);
-        trackingOverlay.addCallback(
-                new OverlayView.DrawCallback() {
-                    @Override
-                    public void drawCallback(final Canvas canvas) {
-                        tracker.draw(canvas);
-                        if (isDebug()) {
-                            tracker.drawDebug(canvas);
-                        }
-                    }
-                });
-
-        tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
+//        rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+//        croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Bitmap.Config.ARGB_8888);
+//
+//        frameToCropTransform =
+//                ImageUtils.getTransformationMatrix(
+//                        previewWidth, previewHeight,
+//                        cropSize, cropSize,
+//                        sensorOrientation, MAINTAIN_ASPECT);
+//
+//        cropToFrameTransform = new Matrix();
+//        frameToCropTransform.invert(cropToFrameTransform);
+//
+//        trackingOverlay = (OverlayView) mActivity.findViewById(R.id.tracking_overlay);
+//        trackingOverlay.addCallback(
+//                new OverlayView.DrawCallback() {
+//                    @Override
+//                    public void drawCallback(final Canvas canvas) {
+//                        tracker.draw(canvas);
+//                        if (isDebug()) {
+//                            tracker.drawDebug(canvas);
+//                        }
+//                    }
+//                });
+//
+//        tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
     }
 
     @Override
     protected void processImage() {
         ++timestamp;
         final long currTimestamp = timestamp;
-        trackingOverlay.postInvalidate();
-
+//        trackingOverlay.postInvalidate();
         // No mutex needed as this method is not reentrant.
         if (computingDetection) {
             readyForNextImage();
             return;
         }
+
         computingDetection = true;
         LOGGER.i("Preparing image " + currTimestamp + " for detection in bg thread.");
 

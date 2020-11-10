@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Trace;
+import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -44,8 +45,8 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
     private static final int PERMISSIONS_REQUEST = 1;
 
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
-    protected int previewWidth = 0;
-    protected int previewHeight = 0;
+    public int previewWidth = 0;
+    public int previewHeight = 0;
     private boolean debug = false;
     private Handler handler;
     private HandlerThread handlerThread;
@@ -58,8 +59,8 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
     private Runnable postInferenceCallback;
     private Runnable imageConverter;
 
-    private Context mContext;
-    private AppCompatActivity mActivity;
+    public Context mContext;
+    public AppCompatActivity mActivity;
 
     @Override
     public void onAttach(Context context) {
@@ -72,8 +73,6 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
         }
     }
 
-    
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LOGGER.d("onCreateView " + this);
@@ -81,13 +80,13 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
 
         if (hasPermission()) {
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-                    setDesiredPreviewFrameSize(new Size(view.getMeasuredWidth(), view.getMeasuredHeight()));
-                    setFragment();
-                }
-            });
+//            view.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    setDesiredPreviewFrameSize(new Size(view.getMeasuredWidth(), view.getMeasuredHeight()));
+//                    setFragment();
+//                }
+//            });
         } else {
             requestPermission();
         }
@@ -239,6 +238,70 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
         Trace.endSection();
     }
 
+    /** Customed function */
+    public void getImagefromCamera(Image _image) {
+        // We need wait until we have some size from onPreviewSizeChosen
+        if (previewWidth == 0 || previewHeight == 0) {
+            return;
+        }
+        if (rgbBytes == null) {
+            rgbBytes = new int[previewWidth * previewHeight];
+        }
+        try {
+            final Image image = _image;
+
+            if (image == null) {
+                return;
+            }
+
+            if (isProcessingFrame) {
+                image.close();
+                return;
+            }
+
+            isProcessingFrame = true;
+            Trace.beginSection("imageAvailable");
+            final Image.Plane[] planes = image.getPlanes();
+            fillBytes(planes, yuvBytes);
+            yRowStride = planes[0].getRowStride();
+            final int uvRowStride = planes[1].getRowStride();
+            final int uvPixelStride = planes[1].getPixelStride();
+
+            imageConverter =
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            ImageUtils.convertYUV420ToARGB8888(
+                                    yuvBytes[0],
+                                    yuvBytes[1],
+                                    yuvBytes[2],
+                                    previewWidth,
+                                    previewHeight,
+                                    yRowStride,
+                                    uvRowStride,
+                                    uvPixelStride,
+                                    rgbBytes);
+                        }
+                    };
+
+            postInferenceCallback =
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            image.close();
+                            isProcessingFrame = false;
+                        }
+                    };
+
+            processImage();
+        } catch (final Exception e) {
+            LOGGER.e(e, "Exception!");
+            Trace.endSection();
+            return;
+        }
+        Trace.endSection();
+    }
+
     @Override
     public synchronized void onStart() {
         LOGGER.d("onStart " + this);
@@ -292,7 +355,7 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSIONS_REQUEST) {
             if (allPermissionsGranted(grantResults)) {
-                setFragment();
+//                setFragment();
             } else {
                 requestPermission();
             }
@@ -377,37 +440,37 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
         return null;
     }
 
-    protected void setFragment() {
-        String cameraId = chooseCamera();
-
-        Fragment fragment;
-        if (useCamera2API) {
-            LOGGER.d("Using Camera2 API");
-            CameraConnectionFragment camera2Fragment =
-                    CameraConnectionFragment.newInstance(
-                            new CameraConnectionFragment.ConnectionCallback() {
-                                @Override
-                                public void onPreviewSizeChosen(final Size size, final int rotation) {
-                                    previewHeight = size.getHeight();
-                                    previewWidth = size.getWidth();
-                                    com.example.cam4pet.CameraFragment.this.onPreviewSizeChosen(size, rotation);
-                                }
-                            },
-                            this,
-                            getLayoutId(),
-                            getDesiredPreviewFrameSize());
-            camera2Fragment.setAspectRatio(getDesiredPreviewFrameSize().getWidth(), getDesiredPreviewFrameSize().getHeight());
-
-            camera2Fragment.setCamera(cameraId);
-            fragment = camera2Fragment;
-        } else {
-            LOGGER.d("Using Camera API");
-            fragment =
-                    new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize());
-        }
-
+//    protected void setFragment() {
+//        String cameraId = chooseCamera();
+//
+//        Fragment fragment;
+//        if (useCamera2API) {
+//            LOGGER.d("Using Camera2 API");
+//            CameraConnectionFragment camera2Fragment =
+//                    CameraConnectionFragment.newInstance(
+//                            new CameraConnectionFragment.ConnectionCallback() {
+//                                @Override
+//                                public void onPreviewSizeChosen(final Size size, final int rotation) {
+//                                    previewHeight = size.getHeight();
+//                                    previewWidth = size.getWidth();
+//                                    com.example.cam4pet.CameraFragment.this.onPreviewSizeChosen(size, rotation);
+//                                }
+//                            },
+//                            this,
+//                            getLayoutId(),
+//                            getDesiredPreviewFrameSize());
+//            camera2Fragment.setAspectRatio(getDesiredPreviewFrameSize().getWidth(), getDesiredPreviewFrameSize().getHeight());
+//
+//            camera2Fragment.setCamera(cameraId);
+//            fragment = camera2Fragment;
+//        } else {
+//            LOGGER.d("Using Camera API");
+//            fragment =
+//                    new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize());
+//        }
+//
 //        mActivity.getSupportFragmentManager().beginTransaction().replace(R.id.detect_fragment, fragment).commit();
-    }
+//    }
 
     protected void fillBytes(final Image.Plane[] planes, final byte[][] yuvBytes) {
         // Because of the variable row stride it's not possible to know in
