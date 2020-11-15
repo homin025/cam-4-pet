@@ -74,6 +74,16 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
     private static Handler handler;
     private static HandlerThread handlerThread;
 
+    DetectEventListener listener;
+
+    public interface DetectEventListener {
+        void onPetDetected(RectF location);
+    }
+
+    public void setDetectEventListener(DetectEventListener listener) {
+        this.listener = listener;
+    }
+
     public static DetectFragment newInstance(Context context) {
         DetectFragment detectFragment = new DetectFragment();
 
@@ -229,11 +239,10 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
                         detectResult = result.getTitle();
 
-                        if (!detectResult.equals("dog") && !detectResult.equals("cat")) {
-                            continue;
-                        }
-                        else {
+                        if (detectResult.equals("dog") || detectResult.equals("cat")) {
                             LOGGER.i("Detection result " + detectResult);
+
+                            listener.onPetDetected(location);
 
                             Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_SHORT);
                             toast.show();

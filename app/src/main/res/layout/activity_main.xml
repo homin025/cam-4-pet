@@ -16,8 +16,6 @@
         app:scale_base_width="360"
         tools:ignore="MissingPrefix">
 
-
-
         <ImageView
             android:id="@+id/footPrint"
             android:layout_width="520dp"
@@ -60,8 +58,6 @@
             app:scale_left="34"
             />
 
-
-
         <ImageButton
             android:id="@+id/btnAlbum"
             android:layout_width="wrap_content"
@@ -81,7 +77,6 @@
             app:scale_left="79"
             app:scale_top="525"
             app:scale_width="130" />
-
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
