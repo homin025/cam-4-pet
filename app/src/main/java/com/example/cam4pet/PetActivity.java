@@ -22,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.ar.core.Pose;
-import com.google.ar.core.Plane;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.TrackingState;
@@ -32,12 +30,8 @@ import com.google.ar.core.exceptions.NotYetAvailableException;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.google.ar.sceneform.ux.TransformableNode;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.collision.Ray;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 
 import java.util.List;
@@ -52,21 +46,22 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private ArFragment arFragment;
     private DetectFragment detectFragment;
 
-    private AnchorNode mAnchorNode;
     public ModelRenderable andyRenderable;
     public ModelRenderable dogbowlRenderable;
 
     public int viewWidth, viewHeight;
     public int imageWidth, imageHeight;
+    private boolean isProcessingObject = false;
 
     private boolean isInitialized = false;
 
-    /////ui
+    // UI
     private ImageButton button[] = new ImageButton[3];
     private ImageButton backBtn;
 
     public int count = 0;
-    //putExtra
+
+    // Put extra
     public int btnNum = 2;
     public int checkNum; // 0-food, 1-snack, 2-toy
 
@@ -93,7 +88,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         // 레이아웃을 위에 겹쳐서 올리는 부분
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // ad_layout
+        // 광고 레이아웃
         // 레이아웃 객체 생성
         LinearLayout ad_layout = (LinearLayout) inflater.inflate(R.layout.ad_layout, null);
         // 레이아웃 배경 투명도 주기
@@ -118,8 +113,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         ad_imageView.setVisibility(View.INVISIBLE);
         backBtn.setVisibility(View.INVISIBLE);
 
-        //checkNum 0: food, 1: snack, 2: toy
-        //btnNum 0: 1번째 버튼, 1: 2번째 버튼, 2: 3번째 버튼
+        // checkNum 0: food, 1: snack, 2: toy
+        // btnNum 0: 1번째 버튼, 1: 2번째 버튼, 2: 3번째 버튼
         button[0].setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -143,6 +138,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
             }
         });
+
         button[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,8 +223,6 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             return;
         }
 
-        location = transformRectF(location);
-
         //////////////////////////////
 
 
@@ -240,7 +234,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             HitResult hit = hits.get(0);
 
             Anchor anchor = hit.createAnchor();
-            mAnchorNode = new AnchorNode(anchor);
+            AnchorNode mAnchorNode = new AnchorNode(anchor);
             mAnchorNode.setParent(arFragment.getArSceneView().getScene());
 
             Node n = new Node();
@@ -252,23 +246,11 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 public void onTap(HitTestResult hitTestResult, MotionEvent motionEvent) {
                     Intent intent = new Intent(PetActivity.this, PopupActivity.class);
                     intent.putExtra("kinds", checkNum);
-                    intent.putExtra("num",btnNum);
+                    intent.putExtra("num", btnNum);
                     startActivity(intent);
                 }
             });
         }
-    }
-
-    private RectF transformRectF(RectF location) {
-        float left = location.left;
-        float top = location.top;
-        float right = location.right;
-        float bottom = location.bottom;
-
-        float ratioWidth = (float) viewWidth / imageWidth;
-        float ratioHeight = (float) viewHeight / imageHeight;
-
-        return new RectF(left * ratioWidth, top * ratioHeight, right * ratioWidth, bottom * ratioHeight);
     }
 
     private void setUpModel() {
@@ -303,22 +285,25 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         try {
             image = Objects.requireNonNull(arFragment.getArSceneView().getArFrame()).acquireCameraImage();
         } catch (NotYetAvailableException e) {
-            Log.i(TAG, "onUpdate: No image available");
+//            Log.i(TAG, "onUpdate: No image available");
             e.printStackTrace();
             return;
         } finally {
-            Log.i(TAG, "onUpdate: Image available");
+//            Log.i(TAG, "onUpdate: Image available");
         }
 
         if(!isInitialized) {
+            viewWidth = arFragment.getArSceneView().getWidth();
+            viewHeight = arFragment.getArSceneView().getHeight();
+
             imageWidth = image.getWidth();
             imageHeight = image.getHeight();
 
             detectFragment.setDesiredPreviewFrameSize(new Size(imageWidth, imageHeight));
             detectFragment.onPreviewSizeChosen(new Size(imageWidth, imageHeight), 90);
+            detectFragment.setDesiredRatio((float) viewWidth / imageWidth, (float) viewHeight / imageHeight);
 
-            viewWidth = arFragment.getArSceneView().getWidth();
-            viewHeight = arFragment.getArSceneView().getHeight();
+            Log.i(TAG, "View Size: " + viewWidth + " X " + viewHeight + " Image Size: " + imageWidth + " X " + imageHeight);
 
             isInitialized = true;
         }
@@ -346,8 +331,15 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         return true;
     }
 
+
     @Override
     public void onPetDetected(RectF location) {
+        if(isProcessingObject) {
+            return;
+        }
+
+        isProcessingObject = true;
         createObject(location);
+        isProcessingObject = false;
     }
 }

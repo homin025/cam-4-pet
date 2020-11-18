@@ -525,6 +525,8 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
 
     protected abstract void setDesiredPreviewFrameSize(Size size);
 
+    protected abstract void setDesiredRatio(float ratioWidth, float ratioHeight);
+
     protected abstract void setNumThreads(int numThreads);
 
     protected abstract void setUseNNAPI(boolean isChecked);

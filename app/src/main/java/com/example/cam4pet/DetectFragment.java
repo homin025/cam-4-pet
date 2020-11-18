@@ -76,6 +76,9 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
     DetectEventListener listener;
 
+    public float ratioWidth;
+    public float ratioHeight;
+
     public interface DetectEventListener {
         void onPetDetected(RectF location);
     }
@@ -239,24 +242,35 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
                         detectResult = result.getTitle();
 
+                        float paramWidth = 1.5f;
+                        float paramHeight = 1.2f;
+
+                        RectF locationModified = new RectF(location.left * ratioWidth * paramWidth, location.top * ratioHeight * paramHeight, location.right * ratioWidth * paramWidth, location.bottom * ratioHeight * paramHeight);
+
                         if (detectResult.equals("dog") || detectResult.equals("cat")) {
                             LOGGER.i("Detection result " + detectResult);
 
-                            listener.onPetDetected(location);
+                            listener.onPetDetected(locationModified);
 
                             Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_SHORT);
                             toast.show();
                         }
 
+                        Log.i("DEBUG", ratioWidth + " X " + ratioHeight);
+                        Log.i("DEBUG", location.left * ratioWidth * paramWidth + " " + location.top * ratioHeight * paramHeight + " " + location.right * ratioWidth * paramWidth + " " + location.bottom * ratioHeight * paramHeight);
+
+                        result.setLocation(locationModified);
+                        mappedRecognitions.add(result);
+
 //                        cropToFrameTransform.mapRect(location);
-//
+
 //                        result.setLocation(location);
 //                        mappedRecognitions.add(result);
                     }
                 }
 
-//                tracker.trackResults(mappedRecognitions, currTimestamp);
-//                trackingOverlay.postInvalidate();
+                tracker.trackResults(mappedRecognitions, currTimestamp);
+                trackingOverlay.postInvalidate();
 
                 computingDetection = false;
             }
@@ -285,6 +299,12 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
     @Override
     protected void setDesiredPreviewFrameSize(Size size) {
         DESIRED_PREVIEW_SIZE = size;
+    }
+
+    @Override
+    protected void setDesiredRatio(float ratioWidth, float ratioHeight) {
+        this.ratioWidth = ratioWidth;
+        this.ratioHeight = ratioHeight;
     }
 
     // Which detection model to use: by default uses Tensorflow Object Detection API frozen
