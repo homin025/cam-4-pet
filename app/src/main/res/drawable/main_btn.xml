@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_pressed="true">
+        <shape>
+
+            <gradient
+                android:angle="90"
+                android:startColor="#99DC8080"
+                android:endColor="#00000000"
+                android:type="linear"/>
+
+            <corners android:topLeftRadius="8dp"
+                android:topRightRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="8dp"  />
+        </shape>
+    </item>
+    <!-- selector가 눌리지 않았을때-->
+    <item android:state_pressed="false">
+        <shape >
+            <solid android:color="#00000000" />
+
+            <corners  android:topLeftRadius="8dp"
+                android:topRightRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="8dp"/>
+        </shape>
+    </item>
+</selector>

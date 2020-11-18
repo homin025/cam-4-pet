@@ -62,7 +62,9 @@
             android:id="@+id/btnAlbum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/album_btn"
+            android:scaleType="fitCenter"
+            android:background="@drawable/main_btn"
+            android:src="@drawable/album_btn"
             app:scale_height="30"
             app:scale_left="79"
             app:scale_top="445"
@@ -72,11 +74,13 @@
             android:id="@+id/btnCam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/camera_btn"
+            android:background="@drawable/main_btn"
+            android:src="@drawable/camera_btn"
+            android:scaleType="fitCenter"
             app:scale_height="30"
             app:scale_left="79"
             app:scale_top="525"
-            app:scale_width="130" />
+            app:scale_width="120" />
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 

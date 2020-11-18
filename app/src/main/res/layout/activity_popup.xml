@@ -5,27 +5,115 @@
     android:id="@+id/ConstarintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00000000"
     android:orientation="vertical">
+
+
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#88FFDFBC"
-        app:scale_base_height="640"
-        app:scale_base_width="360"
+        android:layout_height="wrap_content"
+        app:scale_base_height="284"
+        app:scale_base_width="297"
+        android:background="@drawable/popup_bg"
         tools:ignore="MissingPrefix">
+
+        <ImageView
+            android:id="@+id/popupImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/dog_food01"
+            android:padding="5dp"
+            android:background="@drawable/btn_bg"
+            app:scale_height="173"
+            app:scale_width="125"
+            app:scale_top="8"
+            app:scale_left="12"/>
+
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="310dp"
+            android:layout_height="119dp"
+            android:bufferType="spannable"
+            android:gravity="center"
+            android:text="name"
+            android:textColor="#593E0D"
+            app:scale_height="60"
+            app:scale_width="148"
+            app:scale_textsize="13"
+            app:scale_top="12"
+            app:scale_left="145">
+        </TextView>
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="310dp"
+            android:layout_height="119dp"
+            android:bufferType="spannable"
+            android:gravity="center"
+            android:text="price"
+            android:textColor="#593E0D"
+            app:scale_height="40"
+            app:scale_width="148"
+            app:scale_textsize="13"
+            app:scale_top="72"
+            app:scale_left="145">
+        </TextView>
+
+        <TextView
+            android:id="@+id/productCom"
+            android:layout_width="310dp"
+            android:layout_height="119dp"
+            android:bufferType="spannable"
+            android:gravity="center"
+            android:text="company"
+            android:textColor="#593E0D"
+            app:scale_height="40"
+            app:scale_width="148"
+            app:scale_textsize="13"
+            app:scale_top="112"
+            app:scale_left="145">
+        </TextView>
+        <TextView
+            android:id="@+id/productIngre"
+            android:layout_width="310dp"
+            android:layout_height="119dp"
+            android:bufferType="spannable"
+            android:gravity="center"
+            android:text="ingredient"
+            android:textColor="#593E0D"
+            app:scale_height="60"
+            app:scale_width="148"
+            app:scale_textsize="13"
+            app:scale_top="152"
+            app:scale_left="145">
+        </TextView>
 
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Popup"
-            android:layout_gravity="center_horizontal"
-            app:scale_textsize="40"
-            app:scale_height="100"
-            app:scale_width="200"
-            app:scale_top="200"
-            />
-    </com.ssomai.android.scalablelayout.ScalableLayout>
+            android:text="구매"
+            android:background="@drawable/btn_bg"
+            android:textColor="#593E0D"
+            app:scale_height="41"
+            app:scale_left="19"
+            app:scale_textsize="16"
+            app:scale_top="224"
+            app:scale_width="114" />
 
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="확인"
+            android:background="@drawable/btn_bg"
+            android:textColor="#593E0D"
+            app:scale_height="41"
+            app:scale_left="166"
+            app:scale_textsize="16"
+            app:scale_top="224"
+            app:scale_width="114"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
 </FrameLayout>

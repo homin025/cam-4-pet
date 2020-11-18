@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     ImageButton buttonPet;
 
+    private static final int SELECT_PICTURE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,17 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, PetActivity.class);
             startActivity(intent);
         });
+
+        //conneting gallery
+        ((ImageButton) findViewById(R.id.btnAlbum))
+                .setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View arg0) {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+                    }
+                });
     }
 
     @Override
