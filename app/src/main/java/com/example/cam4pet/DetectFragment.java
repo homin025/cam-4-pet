@@ -120,8 +120,8 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 //                        TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, mActivity.getApplicationContext().getResources().getDisplayMetrics());
 //        borderedText = new BorderedText(textSizePx);
 //        borderedText.setTypeface(Typeface.MONOSPACE);
-//
-//        tracker = new MultiBoxTracker(mContext);
+
+        tracker = new MultiBoxTracker(mContext);
 
         int cropSize = TF_OD_API_INPUT_SIZE;
 
@@ -168,19 +168,19 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
         cropToFrameTransform = new Matrix();
         frameToCropTransform.invert(cropToFrameTransform);
 
-//        trackingOverlay = (OverlayView) mActivity.findViewById(R.id.tracking_overlay);
-//        trackingOverlay.addCallback(
-//                new OverlayView.DrawCallback() {
-//                    @Override
-//                    public void drawCallback(final Canvas canvas) {
-//                        tracker.draw(canvas);
-//                        if (isDebug()) {
-//                            tracker.drawDebug(canvas);
-//                        }
-//                    }
-//                });
-//
-//        tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
+        trackingOverlay = (OverlayView) mActivity.findViewById(R.id.tracking_overlay);
+        trackingOverlay.addCallback(
+                new OverlayView.DrawCallback() {
+                    @Override
+                    public void drawCallback(final Canvas canvas) {
+                        tracker.draw(canvas);
+                        if (isDebug()) {
+                            tracker.drawDebug(canvas);
+                        }
+                    }
+                });
+
+        tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
     }
 
     @Override
