@@ -250,7 +250,7 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
                         if (detectResult.equals("dog") || detectResult.equals("cat")) {
                             LOGGER.i("Detection result " + detectResult);
 
-                            listener.onPetDetected(locationModified);
+                            mActivity.runOnUiThread(() -> listener.onPetDetected(locationModified));
 
                             Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_SHORT);
                             toast.show();
