@@ -11,20 +11,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:scale_base_height="1920"
-        app:scale_base_width="1000"
+        app:scale_base_width="1080"
         tools:ignore="MissingPrefix">
 
         <ImageView
             android:id="@+id/ad_imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ad_bg"
+            android:background="@drawable/bg_advertisement"
             android:padding="5dp"
             app:scale_height="280"
-            app:scale_left="760"
-            app:scale_top="15"
+            app:scale_left="800"
+            app:scale_top="50"
             app:scale_width="220"
-            app:srcCompat="@drawable/dog_food01" />
+            app:srcCompat="@drawable/img_dog_food_01" />
+
+        <ImageButton
+            android:id="@+id/btnReset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button_2"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            app:scale_height="100"
+            app:scale_left="800"
+            app:scale_top="350"
+            app:scale_width="220" />
 
         <TextView
             android:id="@+id/textView"
@@ -33,18 +45,18 @@
             android:layout_height="match_parent"
             android:background="#FFDFBC"
             app:scale_height="320"
-            app:scale_width="1000"
+            app:scale_width="1080"
             app:scale_top="1600"/>
 
         <ImageButton
             android:id="@+id/btn01"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/img_btn_bg"
+            android:background="@drawable/bg_button_1"
             android:scaleType="fitCenter"
-            android:src="@drawable/dog_bowl"
-            app:scale_height="240"
-            app:scale_left="110"
+            android:src="@drawable/img_dog_bowl"
+            app:scale_height="245"
+            app:scale_left="100"
             app:scale_width="190"
             app:scale_top="1630"
             />
@@ -54,9 +66,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
-            android:background="@drawable/img_btn_bg"
-            android:src="@drawable/dog_snack"
-            app:scale_height="240"
+            android:background="@drawable/bg_button_1"
+            android:src="@drawable/img_dog_snack"
+            app:scale_height="245"
             app:scale_left="390"
             app:scale_width="190"
             app:scale_top="1630"
@@ -68,28 +80,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
-            android:background="@drawable/img_btn_bg"
-            android:src="@drawable/dog_toy"
-            app:scale_height="240"
-            app:scale_left="660"
+            android:background="@drawable/bg_button_1"
+            android:src="@drawable/img_dog_toy"
+            app:scale_height="245"
+            app:scale_left="680"
             app:scale_width="190"
-            app:scale_top="1630"/>
+            app:scale_top="1630" />
 
         <ImageButton
-            android:id="@+id/backBtn"
+            android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/img_btn_bg2"
+            android:background="@drawable/bg_button_2"
             android:scaleType="centerInside"
             android:src="@drawable/ic_back"
             app:scale_height="210"
-            app:scale_left="880"
+            app:scale_left="970"
             app:scale_top="1640"
-            app:scale_width="100">
-        </ImageButton>
+            app:scale_width="100" />
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
-
-
 
 </LinearLayout>

@@ -1,8 +1,5 @@
 package com.example.cam4pet;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -108,31 +105,31 @@ class PopupActivity extends AppCompatActivity {
     public void setImg(int btnValue, int num){
         if(btnValue == 0){
             switch (num){
-                case 0: popupImg.setImageResource(R.drawable.dog_food01);
+                case 0: popupImg.setImageResource(R.drawable.img_dog_food_01);
                     break;
-                case 1: popupImg.setImageResource(R.drawable.dog_food02);
+                case 1: popupImg.setImageResource(R.drawable.img_dog_food_02);
                     break;
-                case 2: popupImg.setImageResource(R.drawable.dog_food03);
+                case 2: popupImg.setImageResource(R.drawable.img_dog_food_03);
                     break;
             }
         }
         else if(btnValue == 1){
             switch (num){
-                case 0: popupImg.setImageResource(R.drawable.dog_snack01);
+                case 0: popupImg.setImageResource(R.drawable.img_dog_snack_01);
                     break;
-                case 1: popupImg.setImageResource(R.drawable.dog_snack02);
+                case 1: popupImg.setImageResource(R.drawable.img_dog_snack_02);
                     break;
-                case 2: popupImg.setImageResource(R.drawable.dog_snack03);
+                case 2: popupImg.setImageResource(R.drawable.img_dog_snack_03);
                     break;
             }
         }
         else {
             switch (num){
-                case 0: popupImg.setImageResource(R.drawable.dog_toy01);
+                case 0: popupImg.setImageResource(R.drawable.img_dog_toy_01);
                     break;
-                case 1: popupImg.setImageResource(R.drawable.dog_toy02);
+                case 1: popupImg.setImageResource(R.drawable.img_dog_toy_02);
                     break;
-                case 2: popupImg.setImageResource(R.drawable.dog_toy03);
+                case 2: popupImg.setImageResource(R.drawable.img_dog_toy_03);
                     break;
             }
 

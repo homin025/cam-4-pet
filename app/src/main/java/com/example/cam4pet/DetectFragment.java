@@ -194,6 +194,8 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
             return;
         }
 
+        Toast toast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
+
         computingDetection = true;
         LOGGER.i("Preparing image " + currTimestamp + " for detection in bg thread.");
 
@@ -252,15 +254,18 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
                             mActivity.runOnUiThread(() -> listener.onPetDetected(locationModified));
 
-                            Toast toast = Toast.makeText(mContext, detectResult + " is Detected", Toast.LENGTH_SHORT);
+                            toast.setText("인식 완료: 반려동물이 인식되었습니다!");
+                            toast.show();
+                        } else {
+                            toast.setText("인식 실패: 반려동물을 인식중입니다.");
                             toast.show();
                         }
 
                         Log.i("DEBUG", ratioWidth + " X " + ratioHeight);
                         Log.i("DEBUG", location.left * ratioWidth * paramWidth + " " + location.top * ratioHeight * paramHeight + " " + location.right * ratioWidth * paramWidth + " " + location.bottom * ratioHeight * paramHeight);
 
-                        result.setLocation(locationModified);
-                        mappedRecognitions.add(result);
+//                        result.setLocation(locationModified);
+//                        mappedRecognitions.add(result);
 
 //                        cropToFrameTransform.mapRect(location);
 
@@ -269,8 +274,8 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
                     }
                 }
 
-                tracker.trackResults(mappedRecognitions, currTimestamp);
-                trackingOverlay.postInvalidate();
+//                tracker.trackResults(mappedRecognitions, currTimestamp);
+//                trackingOverlay.postInvalidate();
 
                 computingDetection = false;
             }
