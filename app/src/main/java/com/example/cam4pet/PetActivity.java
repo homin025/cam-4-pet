@@ -31,6 +31,7 @@ import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.HitTestResult;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.rendering.ModelRenderable;
@@ -48,8 +49,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private ArFragment arFragment;
     private DetectFragment detectFragment;
 
-    public ModelRenderable andyRenderable;
     public ModelRenderable dogbowlRenderable;
+    public ModelRenderable ballRenderable;
+    public ModelRenderable boneRenderable;
 
     public ArrayList<Node> objects;
 
@@ -63,7 +65,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private ImageButton button[] = new ImageButton[3];
     private ImageButton btnReset, btnBack;
 
-    public int count = 0;
+    public boolean isBtnPressed = false;
 
     // Put extra
     public int btnNum = 2;
@@ -71,6 +73,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
     private ImageView ad_imageView;
 
+    private Node model = null;
+
+    public boolean isCreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +118,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     arFragment.getArSceneView().getScene().removeChild(object);
                     object.setParent(null);
                 }
-
+                isCreated = false;
                 objects.clear();
             }
         });
@@ -126,7 +131,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
                 intent.putExtra("kinds", checkNum);
-                intent.putExtra("num",btnNum);
+                intent.putExtra("num", btnNum);
                 startActivity(intent);
             }
         });
@@ -138,7 +143,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 button[1].setImageResource(R.drawable.img_dog_snack);
                 button[2].setImageResource(R.drawable.img_dog_toy);
                 btnBack.setVisibility(View.INVISIBLE);
-                count = 0;
+                isBtnPressed = false;
             }
         });
 
@@ -158,17 +163,21 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         button[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(count == 0)
+                if(model != null) {
+                    model.setRenderable(dogbowlRenderable);
+                }
+
+                if(!isBtnPressed)
                 {
                     button[0].setImageResource(R.drawable.img_dog_food_01);
                     button[1].setImageResource(R.drawable.img_dog_food_02);
                     button[2].setImageResource(R.drawable.img_dog_food_03);
                     btnBack.setVisibility(View.VISIBLE);
-                    count = 1;
+                    isBtnPressed = true;
                     checkNum = 0;
                 }
                 else
-                { //count = 1
+                {
                     btnNum = 0;
                     switch (checkNum){ // 각 종류의 1번 상품-> 우측 상단 이미지 변환
                         case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_01); break;
@@ -182,17 +191,21 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         button[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(count == 0)
+                if(model != null) {
+                    model.setRenderable(boneRenderable);
+                }
+
+                if(!isBtnPressed)
                 {
                     button[0].setImageResource(R.drawable.img_dog_snack_01);
                     button[1].setImageResource(R.drawable.img_dog_snack_02);
                     button[2].setImageResource(R.drawable.img_dog_snack_03);
                     btnBack.setVisibility(View.VISIBLE);
-                    count = 1;
+                    isBtnPressed = true;
                     checkNum = 1;
                 }
                 else
-                { //count = 1
+                {
                     btnNum = 1;
                     switch (checkNum){ // 각 종류의 2번 상품-> 우측 상단 이미지 변환
                         case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_02); break;
@@ -206,16 +219,20 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         button[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(count == 0){
+                if(model != null) {
+                    model.setRenderable(ballRenderable);
+                }
+
+                if(!isBtnPressed){
                     button[0].setImageResource(R.drawable.img_dog_toy_01);
                     button[1].setImageResource(R.drawable.img_dog_toy_02);
                     button[2].setImageResource(R.drawable.img_dog_toy_03);
                     btnBack.setVisibility(View.VISIBLE);
-                    count = 1;
+                    isBtnPressed = true;
                     checkNum = 2;
                 }
                 else
-                { //count == 1;
+                {
                     btnNum = 2;
                     switch (checkNum){ // 각 종류의 3번 상품-> 우측 상단 이미지 변환
                         case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_03); break;
@@ -247,15 +264,15 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         int t = (int) location.top / hOffset;
         int b = (int) location.bottom / hOffset;
 
-        int w, h, count = 0;
+        int w = (int) (Math.random() * ((r + 1) - (l - 1))) + (l - 1);
+        int h = (int) (Math.random() * (20 - (b + 2))) + (b + 2);
 
-        do {
-            w = (int) (Math.random() * 9) + 1;
-            h = (int) (Math.random() * 19) + 1;
-            count += 1;
-        } while (!(l <= w - 2 && w < r + 2 && t <= h - 2 && h < b + 2 || count > 10));
+        if(w <= 0 || h <= 0 || w >= 10 || h >= 20) return;
 
         List<HitResult> hits = arFragment.getArSceneView().getArFrame().hitTest(w * wOffset, h * hOffset);
+
+        Log.i("DEBUG", "<RAY POINT> x: " + w * wOffset + ", y: " + h * hOffset);
+
         if(hits.size() != 0) {
             HitResult hit = hits.get(0);
 
@@ -263,12 +280,39 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             AnchorNode mAnchorNode = new AnchorNode(anchor);
             mAnchorNode.setParent(arFragment.getArSceneView().getScene());
 
+            if(isCreated){
+                Vector3 start = model.getWorldPosition();
+                Vector3 end = mAnchorNode.getWorldPosition();
+
+                Vector3 v = Vector3.subtract(end, start);
+
+                if(Vector3.dot(v, v) >= 1 * 1){
+                    model.setParent(null);
+                }
+                else{
+                    mAnchorNode.setParent(null);
+                    return;
+                }
+            }
+
             Node n = new Node();
+            model = n;
             n.setRenderable(dogbowlRenderable);
             n.setParent(mAnchorNode);
 
-            float f = (location.right - location.left) / viewWidth;
-            n.setLocalScale(new Vector3(f, f, f));
+            n.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
+
+            Vector3 v = Quaternion.rotateVector(n.getWorldRotation(), new Vector3(0, 1, 0));
+
+            if(Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))) > 10){
+                Log.i("DEBUG", "DELETE theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
+
+                n.setParent(null);
+                mAnchorNode.setParent(null);
+                return;
+            }
+
+            Log.i("DEBUG", "theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
 
             n.setOnTapListener(new Node.OnTapListener() {
                 @Override
@@ -280,15 +324,17 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
             });
 
+            isCreated = true;
+            Log.i("DEBUG", "<CREATE>");
             objects.add(n);
         }
     }
 
     private void setUpModel() {
         ModelRenderable.builder()
-                .setSource(this, R.raw.andy)
+                .setSource(this, R.raw.dogbowl)
                 .build()
-                .thenAccept(modelRenderable -> andyRenderable = modelRenderable)
+                .thenAccept(modelRenderable -> dogbowlRenderable = modelRenderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
@@ -297,10 +343,24 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                             return null;
                         }
                 );
+
         ModelRenderable.builder()
-                .setSource(this, R.raw.dogbowl)
+                .setSource(this, R.raw.ball)
                 .build()
-                .thenAccept(modelRenderable -> dogbowlRenderable = modelRenderable)
+                .thenAccept(modelRenderable -> ballRenderable = modelRenderable)
+                .exceptionally(
+                        throwable -> {
+                            Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return null;
+                        }
+                );
+
+        ModelRenderable.builder()
+                .setSource(this, R.raw.bone)
+                .build()
+                .thenAccept(modelRenderable -> boneRenderable = modelRenderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
