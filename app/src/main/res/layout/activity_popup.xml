@@ -108,11 +108,11 @@
             android:layout_height="wrap_content"
             android:text="구매"
             android:textColor="#593E0D"
-            app:scale_height="41"
-            app:scale_left="59"
+            app:scale_height="20"
+            app:scale_left="61"
             app:scale_textsize="16"
             app:scale_top="234"
-            app:scale_width="114"
+            app:scale_width="50"
             />
 
 
@@ -135,10 +135,10 @@
             android:text="확인"
             android:textColor="#593E0D"
             app:scale_height="41"
-            app:scale_left="206"
+            app:scale_left="208"
             app:scale_textsize="16"
             app:scale_top="234"
-            app:scale_width="114"/>
+            app:scale_width="50"/>
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 </FrameLayout>
