@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
@@ -101,12 +102,12 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
         // 광고 레이아웃
         // 레이아웃 객체 생성
-        LinearLayout ad_layout = (LinearLayout) inflater.inflate(R.layout.layout_advertisement, null);
+        RelativeLayout ad_layout = (RelativeLayout) inflater.inflate(R.layout.layout_advertisement, null);
         // 레이아웃 배경 투명도 주기
         ad_layout.setBackgroundColor(Color.parseColor("#00000000"));
         // 레이아웃 위에 겹치기
-        LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        RelativeLayout.LayoutParams paramll = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT
         );
         addContentView(ad_layout, paramll);
 
