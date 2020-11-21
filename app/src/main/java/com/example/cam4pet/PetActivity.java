@@ -165,6 +165,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             public void onClick(View view) {
                 if(model != null && !isBtnPressed) {
                     model.setRenderable(bowlRenderable);
+                    model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
                 }
 
                 if(!isBtnPressed)
@@ -193,6 +194,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             public void onClick(View view) {
                 if(model != null && !isBtnPressed) {
                     model.setRenderable(boneRenderable);
+                    model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
 
                 if(!isBtnPressed)
@@ -221,6 +223,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             public void onClick(View view) {
                 if(model != null && !isBtnPressed) {
                     model.setRenderable(ballRenderable);
+                    model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
 
                 if(!isBtnPressed){
@@ -265,7 +268,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         int b = (int) location.bottom / hOffset;
 
         int w = (int) (Math.random() * ((r + 1) - (l - 1))) + (l - 1);
-        int h = (int) (Math.random() * (20 - (b + 2))) + (b + 2);
+        int max_b = b + 5 > 20 ? 20 : b + 5;
+        int h = (int) (Math.random() * (max_b - (b))) + (b);
 
         if(w <= 0 || h <= 0 || w >= 10 || h >= 20) return;
 
