@@ -162,7 +162,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         button[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(model != null) {
+                if(model != null && !isBtnPressed) {
                     model.setRenderable(bowlRenderable);
                 }
 
@@ -190,7 +190,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         button[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(model != null) {
+                if(model != null && !isBtnPressed) {
                     model.setRenderable(boneRenderable);
                 }
 
@@ -218,7 +218,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         button[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(model != null) {
+                if(model != null && !isBtnPressed) {
                     model.setRenderable(ballRenderable);
                 }
 
