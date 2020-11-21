@@ -50,7 +50,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private ArFragment arFragment;
     private DetectFragment detectFragment;
 
-    public ModelRenderable bowlRenderable;
+    public ModelRenderable dogbowlRenderable;
     public ModelRenderable ballRenderable;
     public ModelRenderable boneRenderable;
 
@@ -156,6 +156,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             }
         }
 
+      //  ad_imageView.setVisibility(View.INVISIBLE);
         btnBack.setVisibility(View.INVISIBLE);
 
         // checkNum 0: food, 1: snack, 2: toy
@@ -164,7 +165,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             @Override
             public void onClick(View view) {
                 if(model != null && !isBtnPressed) {
-                    model.setRenderable(bowlRenderable);
+                    model.setRenderable(dogbowlRenderable);
                     model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
                 }
 
@@ -301,7 +302,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
             Node n = new Node();
             model = n;
-            n.setRenderable(bowlRenderable);
+            n.setRenderable(dogbowlRenderable);
             n.setParent(mAnchorNode);
 
             n.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
@@ -338,7 +339,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         ModelRenderable.builder()
                 .setSource(this, R.raw.bowl)
                 .build()
-                .thenAccept(modelRenderable -> bowlRenderable = modelRenderable)
+                .thenAccept(modelRenderable -> dogbowlRenderable = modelRenderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);

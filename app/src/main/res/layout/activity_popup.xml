@@ -89,11 +89,11 @@
             app:scale_left="145">
         </TextView>
 
-        <Button
+
+        <ImageButton
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="구매"
             android:background="@drawable/bg_button"
             android:textColor="#593E0D"
             app:scale_height="41"
@@ -102,17 +102,42 @@
             app:scale_top="224"
             app:scale_width="114" />
 
-        <Button
+        <TextView
+            android:id="@+id/buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="구매"
+            android:textColor="#593E0D"
+            app:scale_height="41"
+            app:scale_left="59"
+            app:scale_textsize="16"
+            app:scale_top="234"
+            app:scale_width="114"
+            />
+
+
+        <ImageButton
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="확인"
             android:background="@drawable/bg_button"
             android:textColor="#593E0D"
             app:scale_height="41"
             app:scale_left="166"
             app:scale_textsize="16"
             app:scale_top="224"
+            app:scale_width="114"/>
+
+        <TextView
+            android:id="@+id/okay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="확인"
+            android:textColor="#593E0D"
+            app:scale_height="41"
+            app:scale_left="206"
+            app:scale_textsize="16"
+            app:scale_top="234"
             app:scale_width="114"/>
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
