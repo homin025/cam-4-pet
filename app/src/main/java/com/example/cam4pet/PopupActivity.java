@@ -63,7 +63,6 @@ public class PopupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popup);
 
-
         productName = findViewById(R.id.productName);
         productPrice = findViewById(R.id.productPrice);
         productCompany = findViewById(R.id.productCom);
@@ -146,12 +145,9 @@ public class PopupActivity extends AppCompatActivity {
 
     public void setBtn(int btnValue,int num) {
         button.setOnClickListener(view -> {
-            switch (btnValue) {
-                case 0:
                     String url = urls[btnValue][num];
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
-            }
         });
     }
 }

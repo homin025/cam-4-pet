@@ -16,7 +16,6 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="300dp"
         android:padding="5dp"
-        android:src="@drawable/img_dog_food_01"
         />
 
     <ImageButton

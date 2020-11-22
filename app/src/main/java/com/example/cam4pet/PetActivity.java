@@ -121,6 +121,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
                 isCreated = false;
                 objects.clear();
+                ad_imageView.setImageResource(0);
             }
         });
 
@@ -145,6 +146,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 button[2].setImageResource(R.drawable.img_dog_toy);
                 btnBack.setVisibility(View.INVISIBLE);
                 isBtnPressed = false;
+                ad_imageView.setImageResource(0);
             }
         });
 
@@ -170,7 +172,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
                 if(!isBtnPressed)
                 {
-                    ad_imageView.setImageResource(R.drawable.img_dog_bowl);
+                   // ad_imageView.setImageResource(R.drawable.img_dog_bowl);
                     button[0].setImageResource(R.drawable.img_dog_food_01);
                     button[1].setImageResource(R.drawable.img_dog_food_02);
                     button[2].setImageResource(R.drawable.img_dog_food_03);
@@ -200,7 +202,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
                 if(!isBtnPressed)
                 {
-                    ad_imageView.setImageResource(R.drawable.img_dog_snack);
+                   // ad_imageView.setImageResource(R.drawable.img_dog_snack);
                     button[0].setImageResource(R.drawable.img_dog_snack_01);
                     button[1].setImageResource(R.drawable.img_dog_snack_02);
                     button[2].setImageResource(R.drawable.img_dog_snack_03);
@@ -229,7 +231,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
 
                 if(!isBtnPressed){
-                    ad_imageView.setImageResource(R.drawable.img_dog_toy);
+                   // ad_imageView.setImageResource(R.drawable.img_dog_toy);
                     button[0].setImageResource(R.drawable.img_dog_toy_01);
                     button[1].setImageResource(R.drawable.img_dog_toy_02);
                     button[2].setImageResource(R.drawable.img_dog_toy_03);
