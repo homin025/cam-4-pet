@@ -80,7 +80,7 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
     public float ratioHeight;
 
     public interface DetectEventListener {
-        void onPetDetected(RectF location);
+        void onPetDetected(String result, RectF location);
     }
 
     public void setDetectEventListener(DetectEventListener listener) {
@@ -252,13 +252,13 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
                         if (detectResult.equals("dog") || detectResult.equals("cat")) {
                             LOGGER.i("Detection result " + detectResult);
 
-                            mActivity.runOnUiThread(() -> listener.onPetDetected(locationModified));
+                            mActivity.runOnUiThread(() -> listener.onPetDetected(detectResult, locationModified));
 
-                            toast.setText("인식 완료: 반려동물이 인식되었습니다!");
-                            toast.show();
+//                            toast.setText("인식 완료: 반려동물이 인식되었습니다!");
+//                            toast.show();
                         } else {
-                            toast.setText("인식 실패: 반려동물을 인식중입니다.");
-                            toast.show();
+//                            toast.setText("인식 실패: 반려동물을 인식중입니다.");
+//                            toast.show();
                         }
 
                         Log.i("DEBUG", ratioWidth + " X " + ratioHeight);

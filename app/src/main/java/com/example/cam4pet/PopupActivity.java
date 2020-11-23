@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,21 +28,21 @@ public class PopupActivity extends AppCompatActivity {
     String[][] food = {
             {"The Real 더리얼 그레이프리 크런치 닭고기", "ANF 산전연령 유기농 6Free 연어 애견사료", "에코1 유기농 양고기 애견사료"},
             {"53990won", "40000won", "19000won"},
-            {"하림","대산앤컴퍼니","네츄럴코어"},
-            {"닭고기, 병아리콩, 타피오카전분..","연어, 닭고기, 쌀, 현미..","양고기, 시금치, 고구마 ..."}
+            {"하림", "대산앤컴퍼니", "네츄럴코어"},
+            {"닭고기, 병아리콩, 타피오카전분..", "연어, 닭고기, 쌀, 현미..", "양고기, 시금치, 고구마 ..."}
     };
     String [][] snack = {
             {"밀크껌 대", "부드러운 덴탈껌 강아지 치석제거", "강아지 트릿"},
             {"9900won", "9800won", "23700won"},
             {"굿프랜드", "피피픽", "반려소반"},
-            {"우피, 우유향","쌀, 타피오카 전분, 콜라겟, 치킨펫..","닭가슴살 100%"}
+            {"우피, 우유향", "쌀, 타피오카 전분, 콜라겟, 치킨펫..", "닭가슴살 100%"}
     };
 
     String [][] toy = {
-                    {"라텍스 스포츠 반려견 장난감", "딩동펫 반려동물 터그장난감 시바", "딩동펫 반려견 공룡알 간식볼"},
-                    {"5,720won", "8,800won", "8,800won"},
-                    {"제제펫", "딩동펫", "딩동펫"},
-                    {"라텍스..","폴라폴리스, 솜..","PP.."}
+            {"라텍스 스포츠 반려견 장난감", "딩동펫 반려동물 터그장난감 시바", "딩동펫 반려견 공룡알 간식볼"},
+            {"5,720won", "8,800won", "8,800won"},
+            {"제제펫", "딩동펫", "딩동펫"},
+            {"라텍스..", "폴라폴리스, 솜..", "PP.."}
     };
 
     String [][] urls = {

@@ -50,6 +50,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private ArFragment arFragment;
     private DetectFragment detectFragment;
 
+    private Toast toast;
+
     public ModelRenderable dogbowlRenderable;
     public ModelRenderable ballRenderable;
     public ModelRenderable boneRenderable;
@@ -91,6 +93,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         detectFragment = DetectFragment.newInstance(this);
         detectFragment.setDetectEventListener(this);
 
+        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+
         objects = new ArrayList<>();
 
         setUpModel();
@@ -120,7 +124,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     object.setParent(null);
                 }
                 isCreated = false;
+
                 objects.clear();
+
                 ad_imageView.setImageResource(0);
             }
         });
@@ -433,12 +439,16 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
 
     @Override
-    public void onPetDetected(RectF location) {
+    public void onPetDetected(String result, RectF location) {
         if(isProcessingObject) {
             return;
         }
 
         isProcessingObject = true;
+
+        toast.setText(result + " 가 인식되었습니다.");
+        toast.show();
+
         createObject(location);
         isProcessingObject = false;
     }
