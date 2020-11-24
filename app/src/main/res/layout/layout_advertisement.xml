@@ -11,33 +11,11 @@
     <ImageView
         android:id="@+id/ad_imageView"
         android:layout_width="110dp"
-        android:layout_height="130dp"
+        android:layout_height="140dp"
         android:background="@drawable/bg_advertisement"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="300dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="295dp"
         android:padding="5dp"
-        />
-
-    <ImageButton
-        android:id="@+id/btnReset"
-        android:layout_width="80dp"
-        android:layout_height="35dp"
-        android:layout_marginLeft="320dp"
-        android:layout_marginTop="140dp"
-        android:background="@drawable/bg_button_1"
-        android:scaleType="centerInside" />
-
-
-    <TextView
-        android:id="@+id/reset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RESET"
-        android:textSize="19dp"
-        android:textColor="#593E0D"
-        android:layout_marginLeft="332dp"
-        android:layout_marginTop="145dp"
-
         />
 
     <com.ssomai.android.scalablelayout.ScalableLayout
@@ -51,15 +29,28 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_gravity="bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#FFDFBC"
+            android:layout_gravity="bottom"
             android:adjustViewBounds="true"
+            android:background="#FFDFBC"
             app:scale_height="330"
-            app:scale_width="1000"
-            />
+            app:scale_width="1000" />
 
+        <TextView
+            android:id="@+id/toastView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_toast"
+            android:padding="10dp"
+            android:text="반려동물을 인식 중입니다."
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            app:scale_height="120"
+            app:scale_left="165"
+            app:scale_textsize="45"
+            app:scale_top="80"
+            app:scale_width="690" />
 
         <ImageButton
             android:id="@+id/btn01"
@@ -69,7 +60,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/img_dog_bowl"
             app:scale_height="245"
-            app:scale_left="100"
+            app:scale_left="80"
             app:scale_width="190"
             app:scale_top="40"
             />
@@ -82,7 +73,7 @@
             android:background="@drawable/bg_button_1"
             android:src="@drawable/img_dog_snack"
             app:scale_height="245"
-            app:scale_left="370"
+            app:scale_left="340"
             app:scale_width="190"
             app:scale_top="40"
             />
@@ -95,21 +86,33 @@
             android:background="@drawable/bg_button_1"
             android:src="@drawable/img_dog_toy"
             app:scale_height="245"
-            app:scale_left="640"
+            app:scale_left="600"
             app:scale_width="190"
             app:scale_top="40"/>
 
         <ImageButton
-            android:id="@+id/btnBack"
+            android:id="@+id/btnReset"
             android:layout_width="28dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_button_1"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_reset"
             app:scale_height="220"
-            app:scale_left="880"
+            app:scale_left="830"
             app:scale_top="50"
-            app:scale_width="100" />
+            app:scale_width="120" />
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnBack"-->
+<!--            android:layout_width="28dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/bg_button_1"-->
+<!--            android:scaleType="centerInside"-->
+<!--            android:src="@drawable/ic_back"-->
+<!--            app:scale_height="220"-->
+<!--            app:scale_left="880"-->
+<!--            app:scale_top="50"-->
+<!--            app:scale_width="100" />-->
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 

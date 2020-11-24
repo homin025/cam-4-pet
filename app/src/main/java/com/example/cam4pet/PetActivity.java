@@ -21,8 +21,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cam4pet.util.Logger;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.TrackingState;
@@ -55,6 +57,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     public ModelRenderable dogbowlRenderable;
     public ModelRenderable ballRenderable;
     public ModelRenderable boneRenderable;
+    public ModelRenderable canRenderable;
+    public ModelRenderable cushionRenderable;
+    public ModelRenderable mouseRenderable;
 
     public ArrayList<Node> objects;
 
@@ -63,22 +68,29 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private boolean isProcessingObject = false;
 
     private boolean isInitialized = false;
+    public boolean dogDetected = false;
+    public boolean catDetected = false;
+    public int isChanged = 0;
 
     // UI
     private ImageButton button[] = new ImageButton[3];
-    private ImageButton btnReset, btnBack;
+    private ImageButton btnReset;
+    private TextView toastView;
 
     public boolean isBtnPressed = false;
 
     // Put extra
     public int btnNum = 2;
     public int checkNum; // 0-food, 1-snack, 2-toy
+    public int checkDogCat; //dog - 0, cat -1
+
 
     private ImageView ad_imageView;
 
     private Node model = null;
 
     public boolean isCreated = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +127,10 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         );
         addContentView(ad_layout, paramll);
 
+        toastView = findViewById(R.id.toastView);
+
         btnReset = findViewById(R.id.btnReset);
+        btnReset.setVisibility(View.INVISIBLE);
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,138 +143,96 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 objects.clear();
 
                 ad_imageView.setImageResource(0);
+                checkNum = 3;
             }
         });
 
         ad_imageView = findViewById(R.id.ad_imageView);
-        btnBack = findViewById(R.id.btnBack);
 
         ad_imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
-                intent.putExtra("kinds", checkNum);
-                intent.putExtra("num", btnNum);
-                startActivity(intent);
+                if(checkNum != 3){
+                    Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
+                    intent.putExtra("kinds", checkNum);
+                    intent.putExtra("num", btnNum);
+                    intent.putExtra("checkDogCat", checkDogCat);
+                    startActivity(intent);
+                }
             }
         });
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                button[0].setImageResource(R.drawable.img_dog_bowl);
-                button[1].setImageResource(R.drawable.img_dog_snack);
-                button[2].setImageResource(R.drawable.img_dog_toy);
-                btnBack.setVisibility(View.INVISIBLE);
-                isBtnPressed = false;
-                ad_imageView.setImageResource(0);
-            }
-        });
-
+        //button 생성 & 인식 전엔 invisible
         for(int i = 0; i<3; i++){
             switch(i){
-                case 0: button[i] = findViewById(R.id.btn01); break;
+                case 0: button[i] = findViewById(R.id.btn01);break;
                 case 1: button[i] = findViewById(R.id.btn02); break;
                 case 2: button[i] = findViewById(R.id.btn03); break;
             }
+            button[i].setVisibility(View.INVISIBLE);
         }
-
-        btnBack.setVisibility(View.INVISIBLE);
 
         // checkNum 0: food, 1: snack, 2: toy
         // btnNum 0: 1번째 버튼, 1: 2번째 버튼, 2: 3번째 버튼
-        button[0].setOnClickListener(new View.OnClickListener() {
+        // checkDogCat 0: dog, 1: cat // dog, cat 구별
+
+        button[0].setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(model != null && !isBtnPressed) {
+                if(model != null && !isBtnPressed && dogDetected) {
                     model.setRenderable(dogbowlRenderable);
                     model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
                 }
+                else if(model != null && !isBtnPressed && catDetected){
+                    model.setRenderable(canRenderable);
+                }
 
-                if(!isBtnPressed)
-                {
-                   // ad_imageView.setImageResource(R.drawable.img_dog_bowl);
-                    button[0].setImageResource(R.drawable.img_dog_food_01);
-                    button[1].setImageResource(R.drawable.img_dog_food_02);
-                    button[2].setImageResource(R.drawable.img_dog_food_03);
-                    btnBack.setVisibility(View.VISIBLE);
-                    isBtnPressed = true;
-                    checkNum = 0;
-                }
-                else
-                {
-                    btnNum = 0;
-                    switch (checkNum){ // 각 종류의 1번 상품-> 우측 상단 이미지 변환
-                        case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_01); break;
-                        case 1: ad_imageView.setImageResource(R.drawable.img_dog_snack_01); break;
-                        case 2: ad_imageView.setImageResource(R.drawable.img_dog_toy_01); break;
-                    }
-                }
+                checkNum = 0;
+                btnNum =(int) (Math.random() * 3); // 3개 상품 랜덤 전환
+                setUpAdView(checkDogCat, checkNum, btnNum);
+
             }
         });
 
         button[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(model != null && !isBtnPressed) {
+                if(model != null && !isBtnPressed && dogDetected) {
                     model.setRenderable(boneRenderable);
                     model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
+                else if(model != null && !isBtnPressed && catDetected){
+                    model.setRenderable(mouseRenderable);
+                }
 
-                if(!isBtnPressed)
-                {
-                   // ad_imageView.setImageResource(R.drawable.img_dog_snack);
-                    button[0].setImageResource(R.drawable.img_dog_snack_01);
-                    button[1].setImageResource(R.drawable.img_dog_snack_02);
-                    button[2].setImageResource(R.drawable.img_dog_snack_03);
-                    btnBack.setVisibility(View.VISIBLE);
-                    isBtnPressed = true;
-                    checkNum = 1;
-                }
-                else
-                {
-                    btnNum = 1;
-                    switch (checkNum){ // 각 종류의 2번 상품-> 우측 상단 이미지 변환
-                        case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_02); break;
-                        case 1: ad_imageView.setImageResource(R.drawable.img_dog_snack_02); break;
-                        case 2: ad_imageView.setImageResource(R.drawable.img_dog_toy_02); break;
-                    }
-                }
+
+                checkNum = 1;
+                btnNum =(int) (Math.random() * 3); // 3개 상품 랜덤 전환
+                setUpAdView(checkDogCat, checkNum, btnNum);
             }
         });
 
         button[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(model != null && !isBtnPressed) {
+                if(model != null && !isBtnPressed && dogDetected) {
                     model.setRenderable(ballRenderable);
                     model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
-
-                if(!isBtnPressed){
-                   // ad_imageView.setImageResource(R.drawable.img_dog_toy);
-                    button[0].setImageResource(R.drawable.img_dog_toy_01);
-                    button[1].setImageResource(R.drawable.img_dog_toy_02);
-                    button[2].setImageResource(R.drawable.img_dog_toy_03);
-                    btnBack.setVisibility(View.VISIBLE);
-                    isBtnPressed = true;
-                    checkNum = 2;
+                else if(model != null && !isBtnPressed && catDetected){
+                    model.setRenderable(cushionRenderable);
                 }
-                else
-                {
-                    btnNum = 2;
-                    switch (checkNum){ // 각 종류의 3번 상품-> 우측 상단 이미지 변환
-                        case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_03); break;
-                        case 1: ad_imageView.setImageResource(R.drawable.img_dog_snack_03); break;
-                        case 2: ad_imageView.setImageResource(R.drawable.img_dog_toy_03); break;
-                    }
 
-                }
+                checkNum = 2;
+                btnNum =(int) (Math.random() * 3); // 3개 상품 랜덤 전환
+
+                setUpAdView(checkDogCat, checkNum, btnNum);
+
             }
         });
     }
 
     private void createObject(RectF location) {
+
         if(arFragment.getArSceneView().getArFrame() == null) {
             Log.d(TAG, "onUpdate: No frame available");
             return;
@@ -268,6 +241,33 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         if (arFragment.getArSceneView().getArFrame().getCamera().getTrackingState() != TrackingState.TRACKING) {
             Log.d(TAG, "onUpdate: Tracking not started yet");
             return;
+        }
+
+        //button visible & cat,dog-> Btn contents 결정
+        toastView.setVisibility(View.INVISIBLE);
+        btnReset.setVisibility(View.VISIBLE);
+
+        for(int i = 0; i<3; i++) {
+            button[i].setVisibility(View.VISIBLE);
+            if (dogDetected) {
+                switch (i) {
+                    case 0:
+                        button[i].setImageResource(R.drawable.img_dog_bowl); break;
+                    case 1:
+                        button[i].setImageResource(R.drawable.img_dog_snack); break;
+                    case 2:
+                        button[i].setImageResource(R.drawable.img_dog_toy); break;
+                }
+            } else {
+                switch (i) {
+                    case 0:
+                        button[i].setImageResource(R.drawable.img_cat_food); break;
+                    case 1:
+                        button[i].setImageResource(R.drawable.img_cat_toy); break;
+                    case 2:
+                        button[i].setImageResource(R.drawable.img_cat_house); break;
+                }
+            }
         }
 
         int wOffset = viewWidth / 10;
@@ -312,10 +312,17 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
             Node n = new Node();
             model = n;
-            n.setRenderable(dogbowlRenderable);
+
+            //dog & cat => 처음 자동 생성 ModelRenderable
+            if(dogDetected){
+                n.setRenderable(dogbowlRenderable);
+                n.setLocalScale(new Vector3(0.7f, 0.7f, 0.7f));
+            }
+            else{//cat
+                n.setRenderable(canRenderable);
+            }
             n.setParent(mAnchorNode);
 
-            n.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
 
             Vector3 v = Quaternion.rotateVector(n.getWorldRotation(), new Vector3(0, 1, 0));
 
@@ -335,6 +342,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     Intent intent = new Intent(PetActivity.this, PopupActivity.class);
                     intent.putExtra("kinds", checkNum);
                     intent.putExtra("num", btnNum);
+                    intent.putExtra("checkDogCat",checkDogCat);
                     startActivity(intent);
                 }
             });
@@ -384,6 +392,44 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                             return null;
                         }
                 );
+
+        ModelRenderable.builder()
+                .setSource(this, R.raw.catfood)
+                .build()
+                .thenAccept(modelRenderable -> canRenderable = modelRenderable)
+                .exceptionally(
+                        throwable -> {
+                            Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return null;
+                        }
+                );
+
+        ModelRenderable.builder()
+                .setSource(this, R.raw.cushion)
+                .build()
+                .thenAccept(modelRenderable -> cushionRenderable = modelRenderable)
+                .exceptionally(
+                        throwable -> {
+                            Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return null;
+                        }
+                );
+        ModelRenderable.builder()
+                .setSource(this, R.raw.mouse)
+                .build()
+                .thenAccept(modelRenderable -> mouseRenderable = modelRenderable)
+                .exceptionally(
+                        throwable -> {
+                            Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return null;
+                        }
+                );
     }
 
     private void onSceneUpdate(FrameTime frameTime) {
@@ -417,6 +463,20 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         if(image != null) {
             detectFragment.getImagefromCamera(image);
         }
+        //dog->cat cat->dog change moment
+        if(isChanged != 0){
+            for (Node object : objects) {
+                arFragment.getArSceneView().getScene().removeChild(object);
+                object.setParent(null);
+            }
+            isCreated = false;
+
+            objects.clear();
+
+            ad_imageView.setImageResource(0);
+            checkNum = 3;
+            isChanged = 0;
+        }
     }
 
     public static boolean checkIsSupportedDevice(final Activity activity) {
@@ -448,8 +508,83 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
         toast.setText(result + " 가 인식되었습니다.");
         toast.show();
+        //dog -> cat 1
+        //cat -> dog 2
+
+        if(result.equals("dog")){
+            if(catDetected && isCreated){ //cat->dog
+                isChanged = 2;
+            }
+            dogDetected = true;
+            catDetected = false;
+            checkDogCat = 0;
+        }
+        else if(result.equals("cat")){
+            if(dogDetected && isCreated){//dog ->cat
+                isChanged = 1;
+            }
+            catDetected = true;
+            dogDetected = false;
+            checkDogCat = 1;
+        }
 
         createObject(location);
         isProcessingObject = false;
+    }
+
+    private void setUpAdView(int checkDogCat, int checkNum,int btnNum){
+        //checkDogCat 0: dog, 1: cat
+        if(checkDogCat == 0){//dog
+            if(checkNum == 0) {//dog->food button
+                switch (btnNum)
+                {
+                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_01); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_food_02); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_food_03); break;
+                }
+            }
+            else if(checkNum == 1){//dog->snack button
+                switch (btnNum)
+                {
+                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_snack_01); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_snack_02); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_snack_03); break;
+                }
+            }
+            else{//dog->toy button
+                switch (btnNum)
+                {
+                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_toy_01); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_toy_02); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_toy_03); break;
+                }
+            }
+        }
+        else{//cat
+            if(checkNum == 0) {//cat->food button
+                switch (btnNum)
+                {
+                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_food_01); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_food_02); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_food_03); break;
+                }
+            }
+            else if(checkNum == 1){//cat->toy button
+                switch (btnNum)
+                {
+                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_toy_01); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_toy_02); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_toy_03); break;
+                }
+            }
+            else{//cat->house button
+                switch (btnNum)
+                {
+                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_house_01); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_house_02); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_house_03); break;
+                }
+            }
+        }
     }
 }

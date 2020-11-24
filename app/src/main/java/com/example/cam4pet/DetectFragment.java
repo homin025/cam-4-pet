@@ -53,7 +53,6 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
     private Integer sensorOrientation;
 
     private Classifier detector;
-    private String detectResult;
 
     private long lastProcessingTimeMs;
     private Bitmap rgbFrameBitmap = null;
@@ -242,7 +241,7 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
                     if (location != null && result.getConfidence() >= minimumConfidence) {
 //                        canvas.drawRect(location, paint);
 
-                        detectResult = result.getTitle();
+                        String detectResult = result.getTitle();
 
                         float paramWidth = 1.5f;
                         float paramHeight = 1.2f;
