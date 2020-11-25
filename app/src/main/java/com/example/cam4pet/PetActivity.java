@@ -90,7 +90,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private Node model = null;
 
     public boolean isCreated = false;
-
+    private Vector3 offset;
+    private Vector3 target = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,87 +271,134 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             }
         }
 
-        int wOffset = viewWidth / 10;
-        int hOffset = viewHeight / 20;
+        // 수정쓰!
+        if(!isCreated) {
+            float w = (location.left + location.right) / 2f;
+            float h = (location.bottom + 75);
+            h = h > viewHeight ? viewHeight : h;
 
-        int l = (int) location.left / wOffset;
-        int r = (int) location.right / wOffset;
-        int t = (int) location.top / hOffset;
-        int b = (int) location.bottom / hOffset;
+            List<HitResult> hits = arFragment.getArSceneView().getArFrame().hitTest(w, h);
 
-        int w = (int) (Math.random() * ((r + 1) - (l - 1))) + (l - 1);
-        int max_b = b + 5 > 20 ? 20 : b + 5;
-        int h = (int) (Math.random() * (max_b - (b))) + (b);
+            if(hits.size() != 0) {
+                //Log.i("DEBUG", "TEST");
+                HitResult hit = hits.get(0);
 
-        if(w <= 0 || h <= 0 || w >= 10 || h >= 20) return;
+                Anchor anchor = hit.createAnchor();
+                AnchorNode mAnchorNode = new AnchorNode(anchor);
+                mAnchorNode.setParent(arFragment.getArSceneView().getScene());
 
-        List<HitResult> hits = arFragment.getArSceneView().getArFrame().hitTest(w * wOffset, h * hOffset);
+                // test : 평면에 anchor를 생성했기에 점프하는 것일 수 있다 => 뮤직노트때는 안그랬으므로
+                /*
+                Vector3 position = mAnchorNode.getWorldPosition();
+                mAnchorNode.setParent(null);
 
-        Log.i("DEBUG", "<RAY POINT> x: " + w * wOffset + ", y: " + h * hOffset);
+                Pose pose = Pose.makeTranslation(position.x, position.y, position.z);
+                anchor = arFragment.getArSceneView().getSession().createAnchor(pose);
 
-        if(hits.size() != 0) {
-            HitResult hit = hits.get(0);
+                mAnchorNode = new AnchorNode(anchor);*/
+                /**------------------------------------------**/
 
-            Anchor anchor = hit.createAnchor();
-            AnchorNode mAnchorNode = new AnchorNode(anchor);
-            mAnchorNode.setParent(arFragment.getArSceneView().getScene());
 
-            if(isCreated){
-                Vector3 start = model.getWorldPosition();
-                Vector3 end = mAnchorNode.getWorldPosition();
+                Node n = new Node();
+                model = n;
 
-                Vector3 v = Vector3.subtract(end, start);
-
-                if(Vector3.dot(v, v) >= 1 * 1){
-                    model.setParent(null);
+                //dog & cat => 처음 자동 생성 ModelRenderable
+                if(dogDetected){
+                    n.setRenderable(dogbowlRenderable);
+                    n.setLocalScale(new Vector3(0.7f, 0.7f, 0.7f));
                 }
-                else{
+                else{//cat
+                    n.setRenderable(canRenderable);
+                }
+                n.setParent(mAnchorNode);
+
+                n.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
+
+                Vector3 v = Quaternion.rotateVector(n.getWorldRotation(), new Vector3(0, 1, 0));
+
+                if(Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))) > 10){
+                    Log.i("DEBUG", "DELETE theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
+
+                    n.setParent(null);
                     mAnchorNode.setParent(null);
                     return;
                 }
-            }
 
-            Node n = new Node();
-            model = n;
+                Log.i("DEBUG", "theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
 
-            //dog & cat => 처음 자동 생성 ModelRenderable
-            if(dogDetected){
-                n.setRenderable(dogbowlRenderable);
-                n.setLocalScale(new Vector3(0.7f, 0.7f, 0.7f));
-            }
-            else{//cat
-                n.setRenderable(canRenderable);
-            }
-            n.setParent(mAnchorNode);
+                n.setOnTapListener(new Node.OnTapListener() {
+                    @Override
+                    public void onTap(HitTestResult hitTestResult, MotionEvent motionEvent) {
+                        Intent intent = new Intent(PetActivity.this, PopupActivity.class);
+                        intent.putExtra("kinds", checkNum);
+                        intent.putExtra("num", btnNum);
+                        startActivity(intent);
+                    }
+                });
 
+                w = (location.left + location.right) / 2f;
+                h = (location.bottom);
+                h = h > viewHeight ? viewHeight : h;
 
-            Vector3 v = Quaternion.rotateVector(n.getWorldRotation(), new Vector3(0, 1, 0));
+                hits = arFragment.getArSceneView().getArFrame().hitTest(w, h);
 
-            if(Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))) > 10){
-                Log.i("DEBUG", "DELETE theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
+                if(hits.size() != 0) {
+                    hit = hits.get(0);
 
-                n.setParent(null);
-                mAnchorNode.setParent(null);
-                return;
-            }
+                    anchor = hit.createAnchor();
+                    mAnchorNode = new AnchorNode(anchor);
+                    mAnchorNode.setParent(arFragment.getArSceneView().getScene());
 
-            Log.i("DEBUG", "theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
-
-            n.setOnTapListener(new Node.OnTapListener() {
-                @Override
-                public void onTap(HitTestResult hitTestResult, MotionEvent motionEvent) {
-                    Intent intent = new Intent(PetActivity.this, PopupActivity.class);
-                    intent.putExtra("kinds", checkNum);
-                    intent.putExtra("num", btnNum);
-                    intent.putExtra("checkDogCat",checkDogCat);
-                    startActivity(intent);
+                    Vector3 start = mAnchorNode.getWorldPosition();
+                    Vector3 end = model.getWorldPosition();
+                    offset = Vector3.subtract(end, start);
                 }
-            });
+                else{
+                    mAnchorNode.setParent(null);
+                    model.setParent(null);
+                    model = null;
+                    Log.i("DEBUG", "<NOT CREATED>");
+                    return;
+                }
 
-            isCreated = true;
-            Log.i("DEBUG", "<CREATE>");
-            objects.add(n);
+                isCreated = true;
+                Log.i("DEBUG", "<CREATE>");
+                objects.add(n);
+            }
         }
+        else{
+            // 이동
+            float w = (location.left + location.right) / 2f;
+            float h = location.bottom;
+
+            List<HitResult> hits = arFragment.getArSceneView().getArFrame().hitTest(w, h);
+
+            if(hits.size() != 0) {
+                HitResult hit = hits.get(0);
+
+                Anchor anchor = hit.createAnchor();
+                AnchorNode mAnchorNode = new AnchorNode(anchor);
+                mAnchorNode.setParent(arFragment.getArSceneView().getScene());
+
+                Vector3 temp;
+                temp = mAnchorNode.getWorldPosition();
+                temp = Vector3.add(temp, offset);
+
+                mAnchorNode.setParent(null);
+
+                Vector3 currentPos = model.getWorldPosition();
+                float distance = Vector3.subtract(temp, currentPos).length();
+
+                if(distance >= 0.4){ // 40cm이상 움직였으면 target위치를 바꿈, 안움직였으면 위치 그대로
+                    target = temp;
+                    Log.i("DEBUG", "<CHANGE TARGET>");
+                }
+                else{
+                    Log.i("DEBUG", "<STAY TARGET>");
+                }
+            }
+        }
+
     }
 
     private void setUpModel() {
@@ -433,6 +481,30 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     }
 
     private void onSceneUpdate(FrameTime frameTime) {
+        // 이진영이 추가했으~!
+        if(isCreated){
+            if(target != null){
+                Vector3 currentPos = model.getWorldPosition();
+
+                float speed;
+
+                float distance = Vector3.subtract(target, currentPos).length();
+
+                if(distance < 0.1f){ // 남은 거리가 10cm 이하면 그냥 target위치로 설정
+                    model.setWorldPosition(target);
+                    Log.i("DEBUG", "<TELEPORT>");
+                }else{
+                    speed = Math.min(Math.max(0.5f, distance), 5f);
+
+                    Vector3 dir = Vector3.subtract(target, currentPos).normalized().scaled(speed * frameTime.getDeltaSeconds());
+
+                    model.setWorldPosition(Vector3.add(currentPos, dir));
+                    Log.i("DEBUG", "<ONLY MOVE>");
+                }
+            }
+        }
+
+
         Image image = null;
         try {
             image = Objects.requireNonNull(arFragment.getArSceneView().getArFrame()).acquireCameraImage();
