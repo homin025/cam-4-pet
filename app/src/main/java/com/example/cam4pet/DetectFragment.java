@@ -260,8 +260,8 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 //                            toast.show();
                         }
 
-                        Log.i("DEBUG", ratioWidth + " X " + ratioHeight);
-                        Log.i("DEBUG", location.left * ratioWidth * paramWidth + " " + location.top * ratioHeight * paramHeight + " " + location.right * ratioWidth * paramWidth + " " + location.bottom * ratioHeight * paramHeight);
+                        //Log.i("DEBUG", ratioWidth + " X " + ratioHeight);
+                        //Log.i("DEBUG", location.left * ratioWidth * paramWidth + " " + location.top * ratioHeight * paramHeight + " " + location.right * ratioWidth * paramWidth + " " + location.bottom * ratioHeight * paramHeight);
 
 //                        result.setLocation(locationModified);
 //                        mappedRecognitions.add(result);
