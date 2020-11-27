@@ -553,13 +553,13 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
             }
 
-
+            /*
             Camera camera = arFragment.getArSceneView().getScene().getCamera();
             Vector3 cameraPos = camera.getWorldPosition();
             Vector3 forward = camera.getForward();
             Vector3 pos = Vector3.add(cameraPos, forward);
             modelParent.setWorldPosition(pos);
-
+            */
 
             /**
             if(anchorBox != null){
