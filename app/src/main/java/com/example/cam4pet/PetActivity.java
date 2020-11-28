@@ -19,12 +19,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cam4pet.util.Logger;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Pose;
@@ -57,7 +55,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
     private Toast toast;
 
-    public ModelRenderable dogbowlRenderable;
+    public ModelRenderable bowlRenderable;
     public ModelRenderable ballRenderable;
     public ModelRenderable boneRenderable;
     public ModelRenderable canRenderable;
@@ -87,7 +85,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     // Put extra
     public int btnNum = 2;
     public int checkNum; // 0-food, 1-snack, 2-toy
-    public int checkDogCat; //dog - 0, cat -1
+    public int checkDogCat; // dog - 0, cat - 1
 
 
     private ImageView ad_imageView;
@@ -98,8 +96,6 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     public boolean isCreated = false;
     private Vector3 offset;
     private Vector3 target = null;
-
-    private RectF anchorBox = null;
 
 
     @Override
@@ -177,7 +173,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
             }
         });
-        //button 생성 & 인식 전엔 invisible
+
+        // button 생성 & 인식 전엔 invisible
         for(int i = 0; i<3; i++){
             switch(i){
                 case 0: button[i] = findViewById(R.id.btn01);break;
@@ -189,13 +186,13 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
         // checkNum 0: food, 1: snack, 2: toy
         // btnNum 0: 1번째 버튼, 1: 2번째 버튼, 2: 3번째 버튼
-        // checkDogCat 0: dog, 1: cat // dog, cat 구별
+        // checkDogCat 0: dog, 1: cat
 
         button[0].setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 if(model != null && !isBtnPressed && dogDetected) {
-                    model.setRenderable(dogbowlRenderable);
+                    model.setRenderable(bowlRenderable);
                     model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
                 }
                 else if(model != null && !isBtnPressed && catDetected){
@@ -250,8 +247,6 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     }
 
     private void createObject(RectF location) {
-        anchorBox = location;
-
         Log.i("DEBUG", "<DETECTED>");
 
         if(arFragment.getArSceneView().getArFrame() == null) {
@@ -264,7 +259,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             return;
         }
 
-        //button visible & cat,dog-> Btn contents 결정
+        // button visible & cat or dog -> btn contents 결정
         toastView.setVisibility(View.INVISIBLE);
         btnReset.setVisibility(View.VISIBLE);
         reset.setVisibility(View.VISIBLE);
@@ -295,9 +290,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             }
         }
 
-        // 수정쓰!
         if(!isCreated) {
-
             float w = (location.left + location.right) / 2f;
             float h = (location.bottom + 75);
             h = h > viewHeight ? viewHeight : h;
@@ -305,14 +298,11 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             List<HitResult> hits = arFragment.getArSceneView().getArFrame().hitTest(w, h);
 
             if(hits.size() != 0) {
-                //Log.i("DEBUG", "TEST");
                 HitResult hit = hits.get(0);
 
                 Anchor anchor = hit.createAnchor();
                 AnchorNode mAnchorNode = new AnchorNode(anchor);
                 mAnchorNode.setParent(arFragment.getArSceneView().getScene());
-
-                // test : 평면에 anchor를 생성했기에 점프하는 것일 수 있다 => 뮤직노트때는 안그랬으므로
 
                 Vector3 position = mAnchorNode.getWorldPosition();
                 mAnchorNode.setParent(null);
@@ -326,9 +316,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 Node n = new Node();
                 model = n;
 
-                //dog & cat => 처음 자동 생성 ModelRenderable
+                // dog & cat => 처음 자동 생성 ModelRenderable
                 if(dogDetected){
-                    n.setRenderable(dogbowlRenderable);
+                    n.setRenderable(bowlRenderable);
                     n.setLocalScale(new Vector3(0.7f, 0.7f, 0.7f));
                 }
                 else{//cat
@@ -343,14 +333,12 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 Vector3 v = Quaternion.rotateVector(n.getWorldRotation(), new Vector3(0, 1, 0));
 
                 if(Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))) > 10){
-                    //Log.i("DEBUG", "DELETE theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
-
                     n.setParent(null);
                     mAnchorNode.setParent(null);
                     return;
                 }
 
-                //Log.i("DEBUG", "theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
+                // Log.i("DEBUG", "theta: " + Math.abs(Vector3.angleBetweenVectors(v, new Vector3(0, 1, 0))));
 
                 n.setOnTapListener(new Node.OnTapListener() {
                     @Override
@@ -394,20 +382,10 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             }
         }
         else{
-            // model이 갑자기 사라졌다면
+            // model 이 갑자기 사라졌다면
             if(modelParent.getAnchor().getTrackingState() != TrackingState.TRACKING
                     && arFragment.getArSceneView().getArFrame().getCamera().getTrackingState() == TrackingState.TRACKING){
                 Log.i("DEBUG", "<NOT TRACKING>");
-                // Detach the old anchor
-                /*
-                AnchorNode m = (AnchorNode)model.getParent();
-                m.removeChild(model);
-                model.setParent(null);
-                arFragment.getArSceneView().getScene().removeChild(m);
-                m.getAnchor().detach();
-                m.setParent(null);*/
-
-                /*Vector3 pos = model.getWorldPosition();*/
             }
 
             // target 위치 이동
@@ -432,9 +410,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 Vector3 currentPos = model.getWorldPosition();
                 float distance = Vector3.subtract(temp, currentPos).length();
 
-                if(distance >= 0.25){ // 25cm이상 움직였으면 target위치를 바꿈, 안움직였으면 위치 그대로
+                if(distance >= 0.25){ // 25cm 이상 움직였으면 target 위치를 바꿈, 안 움직였으면 위치 그대로
                     target = temp;
-                    //model.getParent().setWorldPosition(target);
+                    // model.getParent().setWorldPosition(target);
 
                     Log.i("DEBUG", "<CHANGE TARGET>");
                 }
@@ -442,7 +420,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     Log.i("DEBUG", "<STAY TARGET>");
                 }
             }
-            else{ // hit한 평면이 없다면 이를 고려해서 대충이라도 target 설정
+            // hit한 평면이 없다면 이를 고려해서 대충이라도 target 설정
+            else{
                 Camera camera = arFragment.getArSceneView().getScene().getCamera();
                 Ray ray =  camera.screenPointToRay(w, h);
 
@@ -455,7 +434,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 Vector3 currentPos = model.getWorldPosition();
                 distance = Vector3.subtract(temp, currentPos).length();
 
-                if(distance >= 0.25){ // 25cm이상 움직였으면 target위치를 바꿈, 안움직였으면 위치 그대로
+                if(distance >= 0.25){ // 25cm 이상 움직였으면 target 위치를 바꿈, 안 움직였으면 위치 그대로
                     target = temp;
                     Log.i("DEBUG", "<CHANGE TARGET>");
                 }
@@ -471,7 +450,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         ModelRenderable.builder()
                 .setSource(this, R.raw.bowl)
                 .build()
-                .thenAccept(modelRenderable -> dogbowlRenderable = modelRenderable)
+                .thenAccept(modelRenderable -> bowlRenderable = modelRenderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
@@ -547,7 +526,6 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     }
 
     private void onSceneUpdate(FrameTime frameTime) {
-        // 이진영이 추가했으~!
         if(isCreated){
             if(target != null){
                 Vector3 currentPos = model.getWorldPosition();
@@ -556,9 +534,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
                 float distance = Vector3.subtract(target, currentPos).length();
 
-                if(distance <= 0.1f){ // 남은 거리가 10cm 이하면 그냥 target위치로 설정
+                if(distance <= 0.1f){ // 남은 거리가 10cm 이하면 그냥 target 위치로 설정
                     model.setWorldPosition(target);
-                    //model.getParent().setWorldPosition(target);
+                    // model.getParent().setWorldPosition(target);
                     Log.i("DEBUG", "<TELEPORT>");
                 }else{
                     speed = Math.min(Math.max(2f, distance), 5f);
@@ -566,7 +544,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     Vector3 dir = Vector3.subtract(target, currentPos).normalized().scaled(speed * frameTime.getDeltaSeconds());
 
                     model.setWorldPosition(Vector3.add(currentPos, dir));
-                    //model.getParent().setWorldPosition(Vector3.add(currentPos, dir));
+                    // model.getParent().setWorldPosition(Vector3.add(currentPos, dir));
                     Log.i("DEBUG", "<ONLY MOVE>");
                 }
             }
@@ -614,7 +592,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
             detectFragment.onPreviewSizeChosen(new Size(imageWidth, imageHeight), 90);
             detectFragment.setDesiredRatio((float) viewWidth / imageWidth, (float) viewHeight / imageHeight);
 
-            //Log.i(TAG, "View Size: " + viewWidth + " X " + viewHeight + " Image Size: " + imageWidth + " X " + imageHeight);
+            // Log.i(TAG, "View Size: " + viewWidth + " X " + viewHeight + " Image Size: " + imageWidth + " X " + imageHeight);
 
             isInitialized = true;
         }
@@ -622,7 +600,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         if(image != null) {
             detectFragment.getImagefromCamera(image);
         }
-        //dog->cat cat->dog change moment
+        // dog -> cat, cat -> dog change moment
         if(isChanged != 0){
             for (Node object : objects) {
                 arFragment.getArSceneView().getScene().removeChild(object);
@@ -665,21 +643,21 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
         isProcessingObject = true;
 
-        toast.setText(result + " 가 인식되었습니다.");
-        toast.show();
-        //dog -> cat 1
-        //cat -> dog 2
+        // toast.setText(result + " 가 인식되었습니다.");
+        // toast.show();
+        // dog -> cat 1
+        // cat -> dog 2
 
-        if(result.equals("dog")){
-            if(catDetected && isCreated){ //cat->dog
+        if(result.equals("dog")) {
+            if(catDetected && isCreated) { // cat -> dog
                 isChanged = 2;
             }
             dogDetected = true;
             catDetected = false;
             checkDogCat = 0;
         }
-        else if(result.equals("cat")){
-            if(dogDetected && isCreated){//dog ->cat
+        else if(result.equals("cat")) {
+            if(dogDetected && isCreated) { // dog -> cat
                 isChanged = 1;
             }
             catDetected = true;
@@ -692,9 +670,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     }
 
     private void setUpAdView(int checkDogCat, int checkNum,int btnNum){
-        //checkDogCat 0: dog, 1: cat
-        if(checkDogCat == 0){//dog
-            if(checkNum == 0) {//dog->food button
+        // checkDogCat 0: dog, 1: cat
+        if(checkDogCat == 0) { //dog
+            if(checkNum == 0) { // dog -> food button
                 switch (btnNum)
                 {
                     case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_01); break;
@@ -702,7 +680,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     case 2: ad_imageView.setImageResource(R.drawable.img_dog_food_03); break;
                 }
             }
-            else if(checkNum == 1){//dog->snack button
+            else if(checkNum == 1) { // dog -> snack button
                 switch (btnNum)
                 {
                     case 0: ad_imageView.setImageResource(R.drawable.img_dog_snack_01); break;
@@ -710,7 +688,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     case 2: ad_imageView.setImageResource(R.drawable.img_dog_snack_03); break;
                 }
             }
-            else{//dog->toy button
+            else { // dog -> toy button
                 switch (btnNum)
                 {
                     case 0: ad_imageView.setImageResource(R.drawable.img_dog_toy_01); break;
@@ -719,8 +697,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
             }
         }
-        else{//cat
-            if(checkNum == 0) {//cat->food button
+        else { //cat
+            if(checkNum == 0) { // cat -> food button
                 switch (btnNum)
                 {
                     case 0: ad_imageView.setImageResource(R.drawable.img_cat_food_01); break;
@@ -728,7 +706,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     case 2: ad_imageView.setImageResource(R.drawable.img_cat_food_03); break;
                 }
             }
-            else if(checkNum == 1){//cat->toy button
+            else if(checkNum == 1) { // cat -> toy button
                 switch (btnNum)
                 {
                     case 0: ad_imageView.setImageResource(R.drawable.img_cat_toy_01); break;
@@ -736,7 +714,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     case 2: ad_imageView.setImageResource(R.drawable.img_cat_toy_03); break;
                 }
             }
-            else{//cat->house button
+            else { // cat -> house button
                 switch (btnNum)
                 {
                     case 0: ad_imageView.setImageResource(R.drawable.img_cat_house_01); break;
