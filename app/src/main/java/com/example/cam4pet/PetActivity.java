@@ -61,7 +61,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     public ModelRenderable ballRenderable;
     public ModelRenderable boneRenderable;
     public ModelRenderable canRenderable;
-    public ModelRenderable cushionRenderable;
+    public ModelRenderable boxRenderable;
     public ModelRenderable mouseRenderable;
 
     public ArrayList<Node> objects;
@@ -79,6 +79,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private ImageButton button[] = new ImageButton[3];
     private ImageButton btnReset;
     private TextView toastView;
+    private ImageView icon;
+    private ImageView reset;
 
     public boolean isBtnPressed = false;
 
@@ -86,6 +88,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     public int btnNum = 2;
     public int checkNum; // 0-food, 1-snack, 2-toy
     public int checkDogCat; //dog - 0, cat -1
+
 
     private ImageView ad_imageView;
 
@@ -97,6 +100,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     private Vector3 target = null;
 
     private RectF anchorBox = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +138,12 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         addContentView(ad_layout, paramll);
 
         toastView = findViewById(R.id.toastView);
+
+        icon = findViewById(R.id.ic_dog);
+        reset = findViewById(R.id.img_reset);
+
+        icon.setVisibility(View.INVISIBLE);
+        reset.setVisibility(View.INVISIBLE);
 
         btnReset = findViewById(R.id.btnReset);
         btnReset.setVisibility(View.INVISIBLE);
@@ -190,6 +200,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
                 else if(model != null && !isBtnPressed && catDetected){
                     model.setRenderable(canRenderable);
+                    model.setLocalScale(new Vector3(1.3f, 1.3f, 1.3f));
                 }
 
                 checkNum = 0;
@@ -208,6 +219,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
                 else if(model != null && !isBtnPressed && catDetected){
                     model.setRenderable(mouseRenderable);
+                    model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
                 }
 
 
@@ -225,7 +237,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
                 else if(model != null && !isBtnPressed && catDetected){
-                    model.setRenderable(cushionRenderable);
+                    model.setRenderable(boxRenderable);
                 }
 
                 checkNum = 2;
@@ -255,10 +267,13 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         //button visible & cat,dog-> Btn contents 결정
         toastView.setVisibility(View.INVISIBLE);
         btnReset.setVisibility(View.VISIBLE);
+        reset.setVisibility(View.VISIBLE);
+        icon.setVisibility(View.VISIBLE);
 
         for(int i = 0; i<3; i++) {
             button[i].setVisibility(View.VISIBLE);
             if (dogDetected) {
+                icon.setImageResource(R.drawable.ic_dog);
                 switch (i) {
                     case 0:
                         button[i].setImageResource(R.drawable.img_dog_bowl); break;
@@ -268,6 +283,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                         button[i].setImageResource(R.drawable.img_dog_toy); break;
                 }
             } else {
+                icon.setImageResource(R.drawable.ic_cat);
                 switch (i) {
                     case 0:
                         button[i].setImageResource(R.drawable.img_cat_food); break;
@@ -317,11 +333,12 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
                 else{//cat
                     n.setRenderable(canRenderable);
+                    n.setLocalRotation(Quaternion.axisAngle(new Vector3(0, 1f, 0), 30f));
                 }
                 n.setParent(mAnchorNode);
                 modelParent = mAnchorNode;
 
-                n.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
+               // n.setLocalScale(new Vector3(1.5f, 1.5f, 1.5f));
 
                 Vector3 v = Quaternion.rotateVector(n.getWorldRotation(), new Vector3(0, 1, 0));
 
@@ -341,6 +358,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                         Intent intent = new Intent(PetActivity.this, PopupActivity.class);
                         intent.putExtra("kinds", checkNum);
                         intent.putExtra("num", btnNum);
+                        intent.putExtra("checkDogCat", checkDogCat);
                         startActivity(intent);
                     }
                 });
@@ -439,7 +457,6 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
                 if(distance >= 0.25){ // 25cm이상 움직였으면 target위치를 바꿈, 안움직였으면 위치 그대로
                     target = temp;
-                    //model.getParent().setWorldPosition(target);
                     Log.i("DEBUG", "<CHANGE TARGET>");
                 }
                 else{
@@ -447,6 +464,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
             }
         }
+
     }
 
     private void setUpModel() {
@@ -503,9 +521,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 );
 
         ModelRenderable.builder()
-                .setSource(this, R.raw.cushion)
+                .setSource(this, R.raw.emptybox)
                 .build()
-                .thenAccept(modelRenderable -> cushionRenderable = modelRenderable)
+                .thenAccept(modelRenderable -> boxRenderable = modelRenderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
