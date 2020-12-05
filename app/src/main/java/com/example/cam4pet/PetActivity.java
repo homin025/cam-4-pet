@@ -61,7 +61,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     public ModelRenderable ballRenderable;
     public ModelRenderable boneRenderable;
     public ModelRenderable canRenderable;
-    public ModelRenderable boxRenderable;
+    public ModelRenderable cushionRenderable;
     public ModelRenderable mouseRenderable;
 
     public ArrayList<Node> objects;
@@ -200,7 +200,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
                 else if(model != null && !isBtnPressed && catDetected){
                     model.setRenderable(canRenderable);
-                    model.setLocalScale(new Vector3(1.3f, 1.3f, 1.3f));
+                    model.setLocalScale(new Vector3(1.5f, 1.5f, 1.5f));
                 }
 
                 checkNum = 0;
@@ -219,7 +219,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
                 else if(model != null && !isBtnPressed && catDetected){
                     model.setRenderable(mouseRenderable);
-                    model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
+                    model.setLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
                 }
 
 
@@ -237,7 +237,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
                 else if(model != null && !isBtnPressed && catDetected){
-                    model.setRenderable(boxRenderable);
+                    model.setLocalScale(new Vector3(1.3f, 1.3f, 1.3f));
+                    model.setRenderable(cushionRenderable);
                 }
 
                 checkNum = 2;
@@ -299,7 +300,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         if(!isCreated) {
 
             float w = (location.left + location.right) / 2f;
-            float h = (location.bottom + 75);
+            float h = (location.bottom + 85);
             h = h > viewHeight ? viewHeight : h;
 
             List<HitResult> hits = arFragment.getArSceneView().getArFrame().hitTest(w, h);
@@ -333,7 +334,8 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
                 else{//cat
                     n.setRenderable(canRenderable);
-                    n.setLocalRotation(Quaternion.axisAngle(new Vector3(0, 1f, 0), 30f));
+                    n.setLocalScale(new Vector3(1.5f, 1.5f, 1.5f));
+                    n.setLocalRotation(Quaternion.axisAngle(new Vector3(0, 1f, 0), 60f));
                 }
                 n.setParent(mAnchorNode);
                 modelParent = mAnchorNode;
@@ -521,9 +523,9 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 );
 
         ModelRenderable.builder()
-                .setSource(this, R.raw.emptybox)
+                .setSource(this, R.raw.cushion)
                 .build()
-                .thenAccept(modelRenderable -> boxRenderable = modelRenderable)
+                .thenAccept(modelRenderable -> cushionRenderable = modelRenderable)
                 .exceptionally(
                         throwable -> {
                             Toast toast = Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);

@@ -39,7 +39,7 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
     private static final int TF_OD_API_INPUT_SIZE = 416;
     private static final boolean TF_OD_API_IS_QUANTIZED = false;
-    private static final String TF_OD_API_MODEL_FILE = "yolov4-416-fp32.tflite";
+    private static final String TF_OD_API_MODEL_FILE = "yolov4-tiny-50000.tflite";
 
     private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/coco.txt";
 
@@ -75,8 +75,15 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
     DetectEventListener listener;
 
+    private String dog[]= {"american_bulldog","american_pit_bull_terrier","basset_hound","beagle","boxer","chihuahua","english_cocker_spaniel","english_setter","german_shorthaired","great_pyrenees","havanese",
+            "japanese_chin","keeshond","leonberger","miniature_pinscher","newfoundland","pomeranian","pug","saint_bernard","samoyed",
+            "scottish_terrier","shiba_inu","staffordshire_bull_terrier","wheaten_terrier","yorkshire_terrier"};
+
     public float ratioWidth;
     public float ratioHeight;
+
+
+
 
     public interface DetectEventListener {
         void onPetDetected(String result, RectF location);
@@ -243,11 +250,19 @@ public class DetectFragment extends CameraFragment implements OnImageAvailableLi
 
                         String detectResult = result.getTitle();
 
+
                         float paramWidth = 1.5f;
                         float paramHeight = 1.2f;
 
                         RectF locationModified = new RectF(location.left * ratioWidth * paramWidth, location.top * ratioHeight * paramHeight, location.right * ratioWidth * paramWidth, location.bottom * ratioHeight * paramHeight);
 
+//                        for(int i = 0; i<dog.length; i++){
+//                            if(detectResult.equals(dog[i])){
+//                                LOGGER.i("Detection result " + detectResult);
+//                                mActivity.runOnUiThread(() -> listener.onPetDetected(detectResult, locationModified));
+//                            }
+//                        }
+                        ///////////////////////
                         if (detectResult.equals("dog") || detectResult.equals("cat")) {
                             LOGGER.i("Detection result " + detectResult);
 
