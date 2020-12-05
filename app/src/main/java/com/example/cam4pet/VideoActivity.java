@@ -48,7 +48,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
 
     private Toast toast;
 
-    public ModelRenderable dogbowlRenderable;
+    public ModelRenderable bowlRenderable;
     public ModelRenderable ballRenderable;
     public ModelRenderable boneRenderable;
     public ModelRenderable canRenderable;
@@ -233,10 +233,10 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
             @Override
             public void onClick(View view) {
                 if(model != null && !isBtnPressed && dogDetected) {
-                    model.setRenderable(dogbowlRenderable);
+                    model.setRenderable(bowlRenderable);
                     model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
                 }
-                else if(model != null && !isBtnPressed && catDetected){
+                else if(model != null && !isBtnPressed && catDetected) {
                     model.setRenderable(canRenderable);
                     model.setLocalScale(new Vector3(1.3f, 1.3f, 1.3f));
                 }
@@ -254,7 +254,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
                     model.setRenderable(boneRenderable);
                     model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
-                else if(model != null && !isBtnPressed && catDetected){
+                else if(model != null && !isBtnPressed && catDetected) {
                     model.setRenderable(mouseRenderable);
                     model.setLocalScale(new Vector3(0.8f, 0.8f, 0.8f));
                 }
@@ -272,7 +272,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
                     model.setRenderable(ballRenderable);
                     model.setLocalScale(new Vector3(1.2f, 1.2f, 1.2f));
                 }
-                else if(model != null && !isBtnPressed && catDetected){
+                else if(model != null && !isBtnPressed && catDetected) {
                     model.setRenderable(boxRenderable);
                 }
 
@@ -288,7 +288,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
         TimerTask TT = new TimerTask() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable(){
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // 해당 작업을 처리함
@@ -344,7 +344,9 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
 
         Random random = new Random();
         if(changeCount == 0) {
-            setUpAdView(checkDogCat, random.nextInt(4), random.nextInt(3));
+            checkNum = random.nextInt(4);
+            btnNum = random.nextInt(3);
+            setUpAdView(checkDogCat, checkNum, btnNum);
             changeCount += 1;
         }
         else if(changeCount < 3) {

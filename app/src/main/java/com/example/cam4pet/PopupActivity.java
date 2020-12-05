@@ -118,7 +118,7 @@ public class PopupActivity extends AppCompatActivity {
 
         setName(checkDogCat, btnValue, num);
         setImg(checkDogCat, btnValue, num);
-        setBtn(checkDogCat, btnValue,num);
+        setBtn(checkDogCat, btnValue, num);
 
         ok_button.setOnClickListener(view -> {
             finish();
@@ -172,10 +172,10 @@ public class PopupActivity extends AppCompatActivity {
         }
     }
 
-    public void setImg( int checkDogCat, int btnValue, int num){
-        if(checkDogCat == 0){//about Dog, SetImageView
-            if(btnValue == 0){
-                switch (num){
+    public void setImg(int checkDogCat, int btnValue, int num){
+        if(checkDogCat == 0) { // About Dog, SetImageView
+            if(btnValue == 0) {
+                switch (num) {
                     case 0: popupImg.setImageResource(R.drawable.img_dog_food_01);
                         break;
                     case 1: popupImg.setImageResource(R.drawable.img_dog_food_02);
@@ -184,7 +184,7 @@ public class PopupActivity extends AppCompatActivity {
                         break;
                 }
             }
-            else if(btnValue == 1){
+            else if(btnValue == 1) {
                 switch (num){
                     case 0: popupImg.setImageResource(R.drawable.img_dog_snack_01);
                         break;
@@ -195,7 +195,7 @@ public class PopupActivity extends AppCompatActivity {
                 }
             }
             else {
-                switch (num){
+                switch (num) {
                     case 0: popupImg.setImageResource(R.drawable.img_dog_toy_01);
                         break;
                     case 1: popupImg.setImageResource(R.drawable.img_dog_toy_02);
@@ -205,9 +205,9 @@ public class PopupActivity extends AppCompatActivity {
                 }
             }
         }
-        else{//about Cat, SetImageView
-            if(btnValue == 0){
-                switch (num){
+        else { // About Cat, SetImageView
+            if(btnValue == 0) {
+                switch (num) {
                     case 0: popupImg.setImageResource(R.drawable.img_cat_food_01);
                         break;
                     case 1: popupImg.setImageResource(R.drawable.img_cat_food_02);
@@ -216,8 +216,8 @@ public class PopupActivity extends AppCompatActivity {
                         break;
                 }
             }
-            else if(btnValue == 1){
-                switch (num){
+            else if(btnValue == 1) {
+                switch (num) {
                     case 0: popupImg.setImageResource(R.drawable.img_cat_toy_01);
                         break;
                     case 1: popupImg.setImageResource(R.drawable.img_cat_toy_02);
@@ -227,7 +227,7 @@ public class PopupActivity extends AppCompatActivity {
                 }
             }
             else {
-                switch (num){
+                switch (num) {
                     case 0: popupImg.setImageResource(R.drawable.img_cat_house_01);
                         break;
                     case 1: popupImg.setImageResource(R.drawable.img_cat_house_02);
@@ -237,11 +237,10 @@ public class PopupActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     public void setBtn(int checkDogCat, int btnValue,int num) {
-        switch(checkDogCat){
+        switch(checkDogCat) {
             case 0:
                 button.setOnClickListener(view -> {
                 String url = dogUrls[btnValue][num];
