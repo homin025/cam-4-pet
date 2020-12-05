@@ -32,10 +32,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".PetActivity" />
-
+        <activity android:name=".VideoActivity"></activity>
         <activity
             android:name=".PopupActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/popupTheme"
             tools:ignore="LockedOrientationActivity" />
     </application>

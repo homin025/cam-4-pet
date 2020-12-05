@@ -37,26 +37,38 @@
             />
 
         <ImageView
-            android:id="@+id/albumImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_album"
-            app:scale_height="35"
-            app:scale_width="35"
-            app:scale_top="439"
-            app:scale_left="34"
-            />
-
-        <ImageView
             android:id="@+id/camImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_cam"
             app:scale_height="35"
             app:scale_width="35"
+            app:scale_top="440"
+            app:scale_left="34"
+            />
+
+        <ImageView
+            android:id="@+id/albumImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_album"
+            app:scale_height="35"
+            app:scale_width="35"
             app:scale_top="520"
             app:scale_left="34"
             />
+
+        <ImageButton
+            android:id="@+id/btnCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_main"
+            android:src="@drawable/btn_camera"
+            android:scaleType="fitCenter"
+            app:scale_height="30"
+            app:scale_left="79"
+            app:scale_top="445"
+            app:scale_width="120" />
 
         <ImageButton
             android:id="@+id/btnAlbum"
@@ -65,18 +77,6 @@
             android:scaleType="fitCenter"
             android:background="@drawable/btn_main"
             android:src="@drawable/btn_album"
-            app:scale_height="30"
-            app:scale_left="79"
-            app:scale_top="445"
-            app:scale_width="112" />
-
-        <ImageButton
-            android:id="@+id/btnCam"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_main"
-            android:src="@drawable/btn_camera"
-            android:scaleType="fitCenter"
             app:scale_height="30"
             app:scale_left="79"
             app:scale_top="525"

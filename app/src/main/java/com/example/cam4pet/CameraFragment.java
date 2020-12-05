@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -47,6 +48,7 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     public int previewWidth = 0;
     public int previewHeight = 0;
+
     private boolean debug = false;
     private Handler handler;
     private HandlerThread handlerThread;
@@ -137,8 +139,8 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
                 Camera.Size previewSize = camera.getParameters().getPreviewSize();
                 previewHeight = previewSize.height;
                 previewWidth = previewSize.width;
-                rgbBytes = new int[previewWidth * previewHeight];
                 onPreviewSizeChosen(new Size(previewSize.width, previewSize.height), 90);
+                rgbBytes = new int[previewWidth * previewHeight];
             }
         } catch (final Exception e) {
             LOGGER.e(e, "Exception!");
@@ -225,6 +227,54 @@ public abstract class CameraFragment extends Fragment implements OnImageAvailabl
                         @Override
                         public void run() {
                             image.close();
+                            isProcessingFrame = false;
+                        }
+                    };
+
+            processImage();
+        } catch (final Exception e) {
+            LOGGER.e(e, "Exception!");
+            Trace.endSection();
+            return;
+        }
+        Trace.endSection();
+    }
+
+    /** Customed function */
+    public void getVideofromAlbum(Bitmap bitmap) {
+        // We need wait until we have some size from onPreviewSizeChosen
+        if (previewWidth == 0 || previewHeight == 0) {
+            return;
+        }
+        if (rgbBytes == null) {
+            rgbBytes = new int[previewWidth * previewHeight];
+        }
+        try {
+            if (bitmap == null) {
+                return;
+            }
+
+            if (isProcessingFrame) {
+//                image.close();
+                return;
+            }
+
+            isProcessingFrame = true;
+            Trace.beginSection("imageAvailable");
+
+            imageConverter =
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            bitmap.getPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight);
+                        }
+                    };
+
+            postInferenceCallback =
+                    new Runnable() {
+                        @Override
+                        public void run() {
+//                            image.close();
                             isProcessingFrame = false;
                         }
                     };

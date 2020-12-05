@@ -5,23 +5,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.Session;
-
-import com.google.ar.sceneform.ux.ArFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -32,29 +25,49 @@ public class MainActivity extends AppCompatActivity {
     ImageButton buttonPet;
 
     private static final int SELECT_PICTURE = 1;
+    private static final int SELECT_VIDEO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonPet = findViewById(R.id.btnCam);
+        buttonPet = findViewById(R.id.btnCamera);
 
         buttonPet.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, PetActivity.class);
             startActivity(intent);
         });
 
-        //conneting gallery
+        // Connecting gallery
         ((ImageButton) findViewById(R.id.btnAlbum))
                 .setOnClickListener(new View.OnClickListener() {
                     public void onClick(View arg0) {
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("video/*");
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        try {
+                            startActivityForResult(Intent.createChooser(intent,"Select Video"), SELECT_VIDEO);
+                        } catch(android.content.ActivityNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_VIDEO) {
+                Uri uri = intent.getData();
+
+                Intent newIntent = new Intent(MainActivity.this, VideoActivity.class);
+                newIntent.putExtra("uri", uri.toString());
+                startActivity(newIntent);
+            }
+        }
     }
 
     @Override

@@ -85,7 +85,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
     // Put extra
     public int btnNum = 2;
     public int checkNum; // 0-food, 1-snack, 2-toy
-    public int checkDogCat; // dog - 0, cat - 1
+    public int checkDogCat; // 0-dog, 1-cat
 
 
     private ImageView ad_imageView;
@@ -110,6 +110,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ar_fragment);
         detectFragment = DetectFragment.newInstance(this);
         detectFragment.setDetectEventListener(this);
+        detectFragment.setDetectModel("yolov4-tiny-50000.tflite");
 
         toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
@@ -322,7 +323,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                     n.setRenderable(bowlRenderable);
                     n.setLocalScale(new Vector3(0.7f, 0.7f, 0.7f));
                 }
-                else{//cat
+                else{ // cat
                     n.setRenderable(canRenderable);
                     n.setLocalScale(new Vector3(1.5f, 1.5f, 1.5f));
                     n.setLocalRotation(Quaternion.axisAngle(new Vector3(0, 1f, 0), 60f));
@@ -602,6 +603,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
         if(image != null) {
             detectFragment.getImagefromCamera(image);
         }
+
         // dog -> cat, cat -> dog change moment
         if(isChanged != 0){
             for (Node object : objects) {
@@ -673,7 +675,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
 
     private void setUpAdView(int checkDogCat, int checkNum,int btnNum){
         // checkDogCat 0: dog, 1: cat
-        if(checkDogCat == 0) { //dog
+        if(checkDogCat == 0) { // dog
             if(checkNum == 0) { // dog -> food button
                 switch (btnNum)
                 {
@@ -699,7 +701,7 @@ public class PetActivity extends AppCompatActivity implements DetectFragment.Det
                 }
             }
         }
-        else { //cat
+        else { // cat
             if(checkNum == 0) { // cat -> food button
                 switch (btnNum)
                 {
