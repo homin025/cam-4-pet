@@ -8,15 +8,27 @@
     android:background="#00000000">
 
 
-    <ImageView
-        android:id="@+id/ad_imageView"
-        android:layout_width="110dp"
-        android:layout_height="140dp"
-        android:background="@drawable/bg_advertisement"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="295dp"
-        android:padding="5dp"
-        />
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_alignParentTop="true"
+        app:scale_base_height="460"
+        app:scale_base_width="1000"
+        tools:ignore="MissingPrefix">
+
+        <ImageView
+            android:id="@+id/ad_imageView"
+            android:layout_width="110dp"
+            android:layout_height="140dp"
+            android:background="@drawable/bg_advertisement"
+            android:padding="5dp"
+            app:scale_width="260"
+            app:scale_height="360"
+            app:scale_left="720"
+            app:scale_top="10"
+            />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:layout_width="wrap_content"

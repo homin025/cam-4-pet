@@ -8,8 +8,6 @@
     android:background="#00000000"
     android:orientation="vertical">
 
-
-
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
