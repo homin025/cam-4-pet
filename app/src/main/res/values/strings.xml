@@ -6,4 +6,28 @@
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 
+    <string name="dog_food_01_name">The Real 더리얼 그레이프리 크런치 닭고기</string>
+    <string name="dog_food_02_name">ANF 산전연령 유기농 6Free 연어 애견사료</string>
+    <string name="dog_food_03_name">에코1 유기농 양고기 애견사료</string>
+
+    <string name="dog_snack_01_name">밀크껌 대</string>
+    <string name="dog_snack_02_name">부드러운 덴탈껌 강아지 치석제거</string>
+    <string name="dog_snack_03_name">강아지 트릿</string>
+
+    <string name="dog_toy_01_name">라텍스 스포츠 반려견 장난감</string>
+    <string name="dog_toy_02_name">딩동펫 반려동물 터그장난감 시바</string>
+    <string name="dog_toy_03_name">딩동펫 반려견 공룡알 간식볼</string>
+
+    <string name="cat_food_01_name">쉬바 고양이 간식캔 그레이비소스 참치</string>
+    <string name="cat_food_02_name">탐사 전연령용 고양이 사료</string>
+    <string name="cat_food_03_name">전연령 밥이보약 고양이사료</string>
+
+    <string name="cat_toy_01_name">고양이용 쥐 장난감 3p</string>
+    <string name="cat_toy_02_name">고양이 낚싯대 장난감 세트"</string>
+    <string name="cat_toy_03_name">마우스 무빙 장난감</string>
+
+    <string name="cat_house_01_name">반려동물 소프트 마약 방석</string>
+    <string name="cat_house_02_name">딩동펫 고양이 공룡알 숨숨 하우스</string>
+    <string name="cat_house_03_name">숨숨터널 고양이 터널 하우스 장난감</string>
+
 </resources>

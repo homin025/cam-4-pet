@@ -4,6 +4,6 @@
     <corners android:radius="15dp" />
     <!--  배경 색상  -->
     <solid android:color="#90000000" />
-    <!--  테두리 설정 '두꼐 / 색상' -->
+    <!--  테두리 설정 '두께 / 색상' -->
 
 </shape>

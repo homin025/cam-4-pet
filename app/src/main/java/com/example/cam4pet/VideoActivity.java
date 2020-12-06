@@ -82,6 +82,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
 
 
     private ImageView ad_imageView;
+    private TextView ad_textView;
 
     private Node model = null;
     private AnchorNode modelParent = null;
@@ -196,11 +197,13 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
             @Override
             public void onClick(View view) {
                 ad_imageView.setImageResource(0);
+                ad_textView.setText("");
                 checkNum = 3;
             }
         });
 
         ad_imageView = findViewById(R.id.ad_imageView);
+        ad_textView = findViewById(R.id.ad_textView);
 
         ad_imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,6 +246,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
 
                 checkNum = 0;
                 btnNum =(int) (Math.random() * 3); // 3개 상품 랜덤 전환
+
                 setUpAdView(checkDogCat, checkNum, btnNum);
             }
         });
@@ -261,6 +265,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
 
                 checkNum = 1;
                 btnNum =(int) (Math.random() * 3); // 3개 상품 랜덤 전환
+
                 setUpAdView(checkDogCat, checkNum, btnNum);
             }
         });
@@ -427,6 +432,7 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
         // dog -> cat, cat -> dog change moment
         if(isChanged != 0){
             ad_imageView.setImageResource(0);
+            ad_textView.setText("");
             checkNum = 3;
             isChanged = 0;
         }
@@ -488,25 +494,25 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
             if(checkNum == 0) { // dog -> food button
                 switch (btnNum)
                 {
-                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_01); break;
-                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_food_02); break;
-                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_food_03); break;
+                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_food_01); ad_textView.setText(R.string.dog_food_01_name); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_food_02); ad_textView.setText(R.string.dog_food_02_name); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_food_03); ad_textView.setText(R.string.dog_food_03_name); break;
                 }
             }
             else if(checkNum == 1) { // dog -> snack button
                 switch (btnNum)
                 {
-                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_snack_01); break;
-                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_snack_02); break;
-                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_snack_03); break;
+                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_snack_01); ad_textView.setText(R.string.dog_snack_01_name); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_snack_02); ad_textView.setText(R.string.dog_snack_02_name); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_snack_03); ad_textView.setText(R.string.dog_snack_03_name); break;
                 }
             }
             else { // dog -> toy button
                 switch (btnNum)
                 {
-                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_toy_01); break;
-                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_toy_02); break;
-                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_toy_03); break;
+                    case 0: ad_imageView.setImageResource(R.drawable.img_dog_toy_01); ad_textView.setText(R.string.dog_toy_01_name); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_dog_toy_02); ad_textView.setText(R.string.dog_toy_02_name); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_dog_toy_03); ad_textView.setText(R.string.dog_toy_03_name); break;
                 }
             }
         }
@@ -514,25 +520,25 @@ public class VideoActivity extends AppCompatActivity implements DetectFragment.D
             if(checkNum == 0) { // cat -> food button
                 switch (btnNum)
                 {
-                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_food_01); break;
-                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_food_02); break;
-                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_food_03); break;
+                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_food_01); ad_textView.setText(R.string.cat_food_01_name); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_food_02); ad_textView.setText(R.string.cat_food_02_name); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_food_03); ad_textView.setText(R.string.cat_food_03_name); break;
                 }
             }
             else if(checkNum == 1) { // cat -> toy button
                 switch (btnNum)
                 {
-                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_toy_01); break;
-                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_toy_02); break;
-                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_toy_03); break;
+                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_toy_01); ad_textView.setText(R.string.cat_toy_01_name); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_toy_02); ad_textView.setText(R.string.cat_toy_02_name); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_toy_03); ad_textView.setText(R.string.cat_toy_03_name); break;
                 }
             }
             else { // cat -> house button
                 switch (btnNum)
                 {
-                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_house_01); break;
-                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_house_02); break;
-                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_house_03); break;
+                    case 0: ad_imageView.setImageResource(R.drawable.img_cat_house_01); ad_textView.setText(R.string.cat_house_01_name); break;
+                    case 1: ad_imageView.setImageResource(R.drawable.img_cat_house_02); ad_textView.setText(R.string.cat_house_02_name); break;
+                    case 2: ad_imageView.setImageResource(R.drawable.img_cat_house_03); ad_textView.setText(R.string.cat_house_03_name); break;
                 }
             }
         }

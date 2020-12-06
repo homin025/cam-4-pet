@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_alignParentTop="true"
-        app:scale_base_height="460"
+        app:scale_base_height="500"
         app:scale_base_width="1000"
         tools:ignore="MissingPrefix">
 
@@ -21,13 +21,28 @@
             android:id="@+id/ad_imageView"
             android:layout_width="110dp"
             android:layout_height="140dp"
-            android:background="@drawable/bg_advertisement"
+            android:background="@drawable/bg_ad_imageview"
             android:padding="5dp"
             app:scale_width="260"
             app:scale_height="360"
             app:scale_left="720"
             app:scale_top="10"
             />
+
+        <TextView
+            android:id="@+id/ad_textView"
+            android:layout_width="110dp"
+            android:layout_height="162dp"
+            android:background="@drawable/bg_ad_textview"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            app:scale_height="100"
+            app:scale_left="720"
+            app:scale_textsize="30"
+            app:scale_top="370"
+            app:scale_width="260" />
+
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
